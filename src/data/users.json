@@ -1,0 +1,23 @@
+[
+    {
+        "email": "jankowalski@xyz.pl",
+        "login": "jankowalski",
+        "password": "haslo",
+        "firstName": "Jan",
+        "lastName": "Kowalski"
+    },
+    {
+        "email": "annanowak@xyz.pl",
+        "login": "annanowak",
+        "password": "haslo2",
+        "firstName": "Anna",
+        "lastName": "Nowak"
+    },
+    {
+        "email": "logan@xyz.pl",
+        "login": "",
+        "password": "",
+        "firstName": "Logan",
+        "lastName": "Pauul"
+    }
+]

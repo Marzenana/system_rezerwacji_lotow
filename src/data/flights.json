@@ -1,0 +1,44 @@
+[
+    {
+        "fromCity": "Wrocław",
+        "toCity": "Paryż",
+        "time": "10:00",
+        "duration": 2
+    },
+    {
+        "fromCity": "Wrocław",
+        "toCity": "Nowy Jork",
+        "time": "15:00",
+        "duration": 9
+    },
+    {
+        "fromCity": "Wrocław",
+        "toCity": "Warszawa",
+        "time": "12:00",
+        "duration": 1
+    },
+    {
+        "fromCity": "Warszawa",
+        "toCity": "Wrocław",
+        "time": "14:00",
+        "duration": 1
+    },
+    {
+        "fromCity": "Warszawa",
+        "toCity": "Wrocław",
+        "time": "14:00",
+        "duration": 1
+    },
+    {
+        "fromCity": "Warszawa",
+        "toCity": "Paryż",
+        "time": "17:00",
+        "duration": 2.5
+    },
+    {
+        "fromCity": "Warszawa",
+        "toCity": "Nowy Jork",
+        "time": "20:00",
+        "duration": 9
+    }
+]

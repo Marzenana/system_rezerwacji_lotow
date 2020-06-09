@@ -4,15 +4,16 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    background: url("../img/airplane.jpg") no-repeat center center fixed ;
+    background: url("../img/airplane-in.jpg") no-repeat center center fixed ;
     background-size: cover;
 }
 
 header {
-    background-color: rgb(241, 241, 241);
+    background-size: cover;
     display: flex;
     justify-content: space-between;
     padding: 0 15px;
+    
 }
 
 .input-element {
@@ -74,13 +75,60 @@ header {
     0 3px 5px rgba(0,0,0,.2),
 }
 
-#btn {
-    width: 35%;
+.btn {
     border: 2px solids white;
-    color: white;
+    color:white;
+    font-weight: bold;
     background: none;
-    border-radius: 25px;
+    // border-radius: 25px;
+    outline: none;
     padding: 5px;
     margin-top: 10px;
     cursor: pointer;
+}
+.btn:hover{
+    border: none;
+    color: black;
+
+}
+
+.subject {
+    font-size: 20px;
+    border: 0px;
+    width: 15%;
+    text-align: center;
+    padding: 4px 0;
+    margin: 6px 0px;
+    border-radius: 5px;
+    outline: none;
+
+}
+
+.city{
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    margin-top: 20vh;
+    
+}
+
+.option-element {
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin: auto;
+    border-radius: 5px;
+}
+.number-of {
+    font-size: 20px;
+    border: 0px;
+    text-align: center;
+    padding: 4px 0;
+    margin: 6px 0px;
+    border-radius: 5px;
+    outline: none;
 }

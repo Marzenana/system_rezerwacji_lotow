@@ -1,6 +1,9 @@
 import "./css/index.scss";
 import users from "./data/users.json";
 import flights from "./data/flights.json";
+import boeing737 from "./airplane/boeing737.svg";
+import bombardier from "./airplane/bombardier.svg";
+import boeing787Dreamliner from "./airplane/boeing787Dreamliner.svg";
 
 // Login
 
@@ -174,23 +177,27 @@ function removeFlightCriteria() {
     document.querySelector("#flight-criteria").innerHTML = "";
 }
 
-
+let chosenAirplane = null;
 function handleCriteriaChange() {
     const fromCity = document.querySelector("#from-city").value;
     const toCity = document.querySelector("#to-city").value;
     const flightDate = document.querySelector("#flight-date").value;
     const flightDetails = document.querySelector("#flight-details");
-    let chosenFlight = null;
-    for(let i=0; i < flights.length; i++){
-        const flight = flights[i]
-        if(flight.fromCity === fromCity && flight.toCity === toCity){
-            chosenFlight = flight
-        }
-    }
-
+   
+ 
     if(fromCity === "" || toCity === ""){
         flightDetails.innerHTML="Wybierz wszystkie kryteria wyszukiwania.";
     } else{
+        let chosenFlight = null;
+        for(let i=0; i < flights.length; i++){
+            const flight = flights[i]
+            if(flight.fromCity === fromCity && flight.toCity === toCity){
+                chosenFlight = flight
+            }
+        }
+        chosenAirplane = chosenFlight.airplane;
+    
+        renderSeatsPicker(chosenFlight.airplane);
         renderFlightDetails(chosenFlight);
     }
         
@@ -214,10 +221,63 @@ function removeFlightDetails() {
 
 
 
-function renderSeatsPicker() {
-    // ...
+function renderSeatsPicker(airplaneName) {
+    let airplane = null;
+    if(airplaneName === "Bombardier") {
+        airplane = bombardier;
+    } else if(airplaneName === "Boeing 737"){
+        airplane = boeing737;
+    } else if(airplaneName === "Boeing 787 Dreamliner"){
+        airplane = boeing787Dreamliner;
+    }
+    document.querySelector("#seats-picker").innerHTML = 
+    `<object id="airplane" data="${airplane}" type="image/svg+xml"></object>`;
+    const airplaneElement = document.querySelector("#airplane");
+    airplaneElement.addEventListener("load",function(){
+
+        const seatsDocument = airplaneElement.contentDocument;
+        const seatsElements = seatsDocument.querySelector("#seats");
+        // console.log(seatsElements);
+        // console.log(airplaneElement);
+        const seats = seatsElements.querySelectorAll("path");
+        seats.forEach(seat => {
+            seat.addEventListener("click", handleSelectSeat);
+            seat.addEventListener("mouseover", handleMouseOverSeat);
+            seat.addEventListener("mouseout", handleMouseOutSeat);
+
+        });
+    })
+}
+
+const selectedSeats = [];
+const hoveredSeats = [];
+function handleSelectSeat(event){
+    console.log("klikniete siedzenie");
+    console.log(event);
+    const seatNumber = event.target.id;
+    const seatNumberIndex = selectedSeats.indexOf(seatNumber);
+    if(seatNumberIndex === -1){
+        selectedSeats.push(seatNumber)
+    }else{
+        selectedSeats.splice(seatNumberIndex, 1);
+    }
+
+
+
+}
+
+function handleMouseOverSeat(event){
+    console.log("najechano na siedzenie");
+    console.log(event.target.id);
+    const seatNumber = event.target.id;
+
+}
+function handleMouseOutSeat(event){
+    console.log("wyjechano z siedzenia");
+    console.log(event);
+    const seatNumber = event.target.id;
 }
 
 function removeSeatsPicker() {
-    document.querySelector("#seat-picker").innerHTML = "";
+    document.querySelector("#seats-picker").innerHTML = "";
 }

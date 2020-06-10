@@ -132,3 +132,26 @@ header {
     border-radius: 5px;
     outline: none;
 }
+
+#seats-picker-wrapper{
+    text-align: center;
+}
+#seats-picker {
+    background-color: white;
+    display: inline-block;
+    transform: rotate(90deg) scale(1.4) scaleX(2.0);
+    
+}
+#airplane {
+    margin: 0 auto;
+    display: block;
+}
+
+@media screen and (max-width: 767px) {
+    #seats-picker {
+        transform: scale(1.0) scaleX(2.0);
+        margin: 0 auto;
+        display: block;
+
+    }
+}

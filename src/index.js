@@ -219,5 +219,5 @@ function renderSeatsPicker() {
 }
 
 function removeSeatsPicker() {
-    // ...
+    document.querySelector("#seat-picker").innerHTML = "";
 }

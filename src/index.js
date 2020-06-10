@@ -197,7 +197,7 @@ function handleCriteriaChange() {
         }
         chosenAirplane = chosenFlight.airplane;
     
-        renderSeatsPicker(chosenFlight.airplane);
+        renderSeatsPicker();
         renderFlightDetails(chosenFlight);
     }
         
@@ -221,13 +221,13 @@ function removeFlightDetails() {
 
 
 
-function renderSeatsPicker(airplaneName) {
+function renderSeatsPicker() {
     let airplane = null;
-    if(airplaneName === "Bombardier") {
+    if(chosenAirplane === "Bombardier") {
         airplane = bombardier;
-    } else if(airplaneName === "Boeing 737"){
+    } else if(chosenAirplane === "Boeing 737"){
         airplane = boeing737;
-    } else if(airplaneName === "Boeing 787 Dreamliner"){
+    } else if(chosenAirplane === "Boeing 787 Dreamliner"){
         airplane = boeing787Dreamliner;
     }
     document.querySelector("#seats-picker").innerHTML = 
@@ -253,29 +253,48 @@ const selectedSeats = [];
 const hoveredSeats = [];
 function handleSelectSeat(event){
     console.log("klikniete siedzenie");
-    console.log(event);
+    // console.log(event);
     const seatNumber = event.target.id;
     const seatNumberIndex = selectedSeats.indexOf(seatNumber);
+    const airplaneElement = document.querySelector("#airplane");
+    const seatsDocument = airplaneElement.contentDocument;
+    const seatsElements = seatsDocument.querySelector("#seats");
+    let seat = seatsElements.querySelector(`#${seatNumber}`);
     if(seatNumberIndex === -1){
+        seat.style["fill"] = "green";
         selectedSeats.push(seatNumber)
+
     }else{
         selectedSeats.splice(seatNumberIndex, 1);
+        seat.style["fill"] = "#f2f2f2";
     }
-
-
-
-}
+    console.log(seat);
+} 
 
 function handleMouseOverSeat(event){
     console.log("najechano na siedzenie");
     console.log(event.target.id);
     const seatNumber = event.target.id;
+    const seatNumberIndex = selectedSeats.indexOf(seatNumber);
+    const airplaneElement = document.querySelector("#airplane");
+    const seatsDocument = airplaneElement.contentDocument;
+    const seatsElements = seatsDocument.querySelector("#seats");
+    let seat = seatsElements.querySelector(`#${seatNumber}`);
+
+    seat.style["fill"] = "blue";
 
 }
 function handleMouseOutSeat(event){
     console.log("wyjechano z siedzenia");
     console.log(event);
     const seatNumber = event.target.id;
+    const seatNumberIndex = selectedSeats.indexOf(seatNumber);
+    const airplaneElement = document.querySelector("#airplane");
+    const seatsDocument = airplaneElement.contentDocument;
+    const seatsElements = seatsDocument.querySelector("#seats");
+    let seat = seatsElements.querySelector(`#${seatNumber}`);
+
+    seat.style["fill"] = "#f2f2f2";
 }
 
 function removeSeatsPicker() {

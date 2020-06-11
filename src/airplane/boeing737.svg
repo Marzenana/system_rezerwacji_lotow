@@ -53,7 +53,7 @@
   <g
      inkscape:groupmode="layer"
      id="seats"
-     inkscape:label="siedzenia" />
+     inkscape:label="siedzenia">
   <path
      style="fill:#e6e6e6;fill-opacity:0.95024878;stroke:#a0a0a0;stroke-width:0.46488189;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="m 70.121864,446.19733 c -0.55117,-7.5e-4 -0.99511,0.81719 -0.99601,1.83508 l -0.004,4.49219 c -9.3e-4,1.01792 0.44157,1.83704 0.99274,1.83778 l 4.64292,0.007 c 0.55117,7.5e-4 0.9966,-0.8172 0.99751,-1.83511 l 0.004,-4.49217 c 9.2e-4,-1.01791 -0.44307,-1.83704 -0.99425,-1.83778 z"
@@ -702,6 +702,7 @@
      style="fill:#e6e6e6;fill-opacity:0.95024878;stroke:#a0a0a0;stroke-width:0.46488189;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="m 19.855005,98.669978 c -0.55116,-7.44e-4 -0.9951,0.817197 -0.996,1.835112 l -0.004,4.49218 c -9.2e-4,1.01791 0.44157,1.83704 0.99273,1.83778 l 4.64292,0.007 c 0.55117,7.4e-4 0.99661,-0.81718 0.99751,-1.8351 l 0.004,-4.49218 c 9.2e-4,-1.017912 -0.44307,-1.83705 -0.99424,-1.837794 z"
      id="path2075-9-5-6-0-620-8" />
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer3"

@@ -35,7 +35,8 @@ function onLogout() {
     renderLoginWrapper();
     removeFlightCriteria();
     removeFlightDetails();
-    removeSeatsPicker()
+    removeSeatsPicker();
+    removeBagPicker();
 }
 
 // Rendereres
@@ -112,9 +113,6 @@ function renderFlightCriteria() {
             Data
             <input id="flight-date" class="subject" type="text" name="flight-date" value="06/06/2020"/>
             <br>
-            <button id="next" class="btn" type="submit">
-            <i class="fas fa-angle-double-right"></i>
-            </button>
         </div>
     </div>`;
 
@@ -195,10 +193,12 @@ function handleCriteriaChange() {
                 chosenFlight = flight
             }
         }
-        chosenAirplane = chosenFlight.airplane;
+        chosenAirplane = chosenFlight ? chosenFlight.airplane : null;
     
-        renderSeatsPicker();
-        renderBagPicker();
+        if (chosenFlight !== null) {
+            renderSeatsPicker();
+            renderBagPicker();
+        } 
         renderFlightDetails(chosenFlight);
     }
         
@@ -211,7 +211,6 @@ function renderFlightDetails(flight) {
     } else {
         flightDetails.innerHTML="Wybrana opcja nie jest dostępna. Zmień kryteria wyszukiwania.";
     }
-
 } 
 
 function removeFlightDetails() {
@@ -230,8 +229,7 @@ function renderSeatsPicker() {
     document.querySelector("#seats-picker").innerHTML = 
     `<object id="airplane" data="${airplane}" type="image/svg+xml"></object>`;
     const airplaneElement = document.querySelector("#airplane");
-    airplaneElement.addEventListener("load",function(){
-
+    airplaneElement.addEventListener("load", function(){
         const seatsDocument = airplaneElement.contentDocument;
         const seatsElements = seatsDocument.querySelector("#seats");
         const seats = seatsElements.querySelectorAll("path");
@@ -254,7 +252,11 @@ function handleSelectSeat(event){
     let seat = seatsElements.querySelector(`#${seatNumber}`);
     if(seatNumberIndex === -1){
         seat.style["fill"] = "green";
-        selectedSeats.push(seatNumber)
+        if (selectedSeats.length < 9) {
+            selectedSeats.push(seatNumber);
+        } else {
+            alert("Nie można wybrać więcej niż 9 miejsc")
+        }
 
     }else{
         selectedSeats.splice(seatNumberIndex, 1);
@@ -290,10 +292,51 @@ function removeSeatsPicker() {
     document.querySelector("#seats-picker").innerHTML = "";
 }
 
+const selectedBags = [];
+
 function renderBagPicker() {
     document.querySelector("#bag-picker").innerHTML =
-    `<object id="minibag" data="${minibag}" type="image/svg+xml"></object>
-    <object id="smallbag" data="${smallbag}" type="image/svg+xml"></object>
-    <object id="mediumbag" data="${mediumbag}" type="image/svg+xml"></object>
-    <object id="bigbag" data="${bigbag}" type="image/svg+xml"></object>`;
+    `<div>
+        <object id="minibag" class="bag" data="${minibag}" type="image/svg+xml"></object>
+        <span>Bagaż podręczny od 5 kg: w cenie </span>
+    </div>
+    <div>
+    <object id="smallbag" class="bag" data="${smallbag}" type="image/svg+xml"></object>
+    <span>Bagaż mały od 10 kg: 50,00 zł </span>
+    </div>
+    <div>
+    <object id="mediumbag" class="bag" data="${mediumbag}" type="image/svg+xml"></object>
+    <span>Bagaż średni od 20 kg: 100,00 zł </span>
+    </div>
+    <div>
+    <object id="bigbag" class="bag" data="${bigbag}" type="image/svg+xml"></object>
+    <span>Bagaż duży powyżej 20 kg (max 30kg): 200,00 zł </span>
+    </div>`;
+
+    const bags = document.querySelectorAll(".bag");
+    bags.forEach(bag => {
+        bag.addEventListener("load", function() {
+            console.log("Loaded")
+            console.log(bag)
+            bag.contentDocument.addEventListener("click", handleSelectBag);
+        });
+    });
+}
+
+function removeBagPicker() {
+    document.querySelector("#bag-picker").innerHTML = "";
+}
+
+function handleSelectBag(event) {
+    const bagId = event.target.id;
+    console.log("selected bag", bagId);
+    const bagIndex = selectedBags.indexOf(bagId);
+    const bag = document.querySelector(`#${bagId}`);
+    if (bagIndex === -1) {
+        selectedBags.push(bagId);
+        bag.style.backgroundColor = "green";
+    } else {
+        selectedBags.splice(bagIndex, 1);
+        bag.style.backgroundColor = "#f0f0f0";
+    }
 }

@@ -158,3 +158,13 @@ header {
 .selected-seat {
     fill: red;
 }
+
+.bag {
+    background-color: #f0f0f0;
+    border: 3px solid #1a1a1a;
+    transform: scale(0.5);
+}
+
+.bag:hover {
+    background-color: #cccccc;
+}

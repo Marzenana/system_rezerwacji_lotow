@@ -4,12 +4,14 @@ import flights from "./data/flights.json";
 import boeing737 from "./airplane/boeing737.svg";
 import bombardier from "./airplane/bombardier.svg";
 import boeing787Dreamliner from "./airplane/boeing787Dreamliner.svg";
+import minibag from "./bag/minibag.svg";
+import smallbag from "./bag/smallbag.svg";
+import mediumbag from "./bag/mediumbag.svg";
+import bigbag from "./bag/bigbag.svg";
 
 // Login
 
 renderLoginWrapper();
-
-
 
 function onLogin(event) {
     event.preventDefault();
@@ -33,6 +35,7 @@ function onLogout() {
     renderLoginWrapper();
     removeFlightCriteria();
     removeFlightDetails();
+    removeSeatsPicker()
 }
 
 // Rendereres
@@ -80,12 +83,9 @@ function renderFlightCriteria() {
         return `<option value="${fromCity}">${fromCity}</option>`
     }).join("\n")
 
-    console.log(fromCities);
-
     const toCities = flights.map(function(flight){
         return flight.toCity;
     })
-    console.log(toCities);
 
     const toCitiesOptions = toCities.filter(function(value,index,array){
         return array.indexOf(value) === index
@@ -198,6 +198,7 @@ function handleCriteriaChange() {
         chosenAirplane = chosenFlight.airplane;
     
         renderSeatsPicker();
+        renderBagPicker();
         renderFlightDetails(chosenFlight);
     }
         
@@ -217,10 +218,6 @@ function removeFlightDetails() {
     document.querySelector("#flight-details").innerHTML = "";
 }
 
-
-
-
-
 function renderSeatsPicker() {
     let airplane = null;
     if(chosenAirplane === "Bombardier") {
@@ -237,8 +234,6 @@ function renderSeatsPicker() {
 
         const seatsDocument = airplaneElement.contentDocument;
         const seatsElements = seatsDocument.querySelector("#seats");
-        // console.log(seatsElements);
-        // console.log(airplaneElement);
         const seats = seatsElements.querySelectorAll("path");
         seats.forEach(seat => {
             seat.addEventListener("click", handleSelectSeat);
@@ -250,10 +245,7 @@ function renderSeatsPicker() {
 }
 
 const selectedSeats = [];
-const hoveredSeats = [];
 function handleSelectSeat(event){
-    console.log("klikniete siedzenie");
-    // console.log(event);
     const seatNumber = event.target.id;
     const seatNumberIndex = selectedSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
@@ -268,12 +260,11 @@ function handleSelectSeat(event){
         selectedSeats.splice(seatNumberIndex, 1);
         seat.style["fill"] = "#f2f2f2";
     }
-    console.log(seat);
+    console.log('seatNumber', seatNumber);
+    console.log('selectedSeats', selectedSeats)
 } 
 
 function handleMouseOverSeat(event){
-    console.log("najechano na siedzenie");
-    console.log(event.target.id);
     const seatNumber = event.target.id;
     const seatNumberIndex = selectedSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
@@ -285,8 +276,6 @@ function handleMouseOverSeat(event){
 
 }
 function handleMouseOutSeat(event){
-    console.log("wyjechano z siedzenia");
-    console.log(event);
     const seatNumber = event.target.id;
     const seatNumberIndex = selectedSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
@@ -294,9 +283,17 @@ function handleMouseOutSeat(event){
     const seatsElements = seatsDocument.querySelector("#seats");
     let seat = seatsElements.querySelector(`#${seatNumber}`);
 
-    seat.style["fill"] = "#f2f2f2";
+    seat.style["fill"] = seatNumberIndex === -1 ? "#f2f2f2" : "green";
 }
 
 function removeSeatsPicker() {
     document.querySelector("#seats-picker").innerHTML = "";
+}
+
+function renderBagPicker() {
+    document.querySelector("#bag-picker").innerHTML =
+    `<object id="minibag" data="${minibag}" type="image/svg+xml"></object>
+    <object id="smallbag" data="${smallbag}" type="image/svg+xml"></object>
+    <object id="mediumbag" data="${mediumbag}" type="image/svg+xml"></object>
+    <object id="bigbag" data="${bigbag}" type="image/svg+xml"></object>`;
 }

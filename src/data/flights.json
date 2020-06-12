@@ -4,48 +4,55 @@
         "toCity": "Paryż",
         "time": "10:00",
         "duration": 2,
-        "airplane": "Boeing 737"
+        "airplane": "Boeing 737",
+        "price": 550,
+        "travelStandard": ["Standard"]
     },
     {
         "fromCity": "Wrocław",
         "toCity": "Nowy Jork",
         "time": "15:00",
         "duration": 9,
-        "airplane": "Boeing 787 Dreamliner"
+        "airplane": "Boeing 787 Dreamliner",
+        "price": 1000,
+        "pricePremium": 2500,
+        "travelStandard": ["Standard", "Premium"]
     },
     {
         "fromCity": "Wrocław",
         "toCity": "Warszawa",
         "time": "12:00",
         "duration": 1,
-        "airplane": "Bombardier"
-    },
+        "airplane": "Bombardier",
+        "price": 250,
+        "travelStandard": ["Standard"]
+    }, 
     {
         "fromCity": "Warszawa",
         "toCity": "Wrocław",
         "time": "14:00",
         "duration": 1,
-        "airplane": "Bombardier"
-    },
-    {
-        "fromCity": "Warszawa",
-        "toCity": "Wrocław",
-        "time": "14:00",
-        "duration": 1,
-        "airplane": "Bombardier"
+        "airplane": "Bombardier",
+        "cena": 300,
+        "travelStandard": ["Standard"]
     },
     {
         "fromCity": "Warszawa",
         "toCity": "Paryż",
         "time": "17:00",
         "duration": 2.5,
-        "airplane": "Boeing 737"
+        "airplane": "Boeing 737",
+        "price": 500,
+        "travelStandard": ["Standard"]
     },
     {
         "fromCity": "Warszawa",
         "toCity": "Nowy Jork",
         "time": "20:00",
         "duration": 9,
-        "airplane": "Boeing 787 Dreamliner"
+        "airplane": "Boeing 787 Dreamliner",
+        "price": 1200,
+        "pricePremium": 2700,
+        "travelStandard": ["Standard", "Premium"]
     }
 ]

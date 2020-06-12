@@ -9,6 +9,16 @@ import smallbag from "./bag/smallbag.svg";
 import mediumbag from "./bag/mediumbag.svg";
 import bigbag from "./bag/bigbag.svg";
 
+// Constants
+
+const TRAVEL_STANDARDS = ["Standard", "Premium"]
+
+// Global variables
+
+let selectedSeats = [];
+let chosenAirplane = null;
+let selectedBags = [];
+
 // Login
 
 renderLoginWrapper();
@@ -21,7 +31,7 @@ function onLogin(event) {
         const user = users[i];
         if(login === user.login && password === user.password) {
             renderUserInfo(user);
-            setTimeout(onLogout, 50000);
+            setTimeout(onLogout, 180000);
             removeLoginWrapper();
             renderFlightCriteria();
             return;
@@ -44,7 +54,11 @@ function onLogout() {
 function renderUserInfo(user) {
     document.querySelector("#user-info").innerHTML = 
     `<i class="fas fa-user"></i>
-    <span>${user.firstName}</span>`;
+    <span>${user.firstName}</span>
+    <button id="logout-button" class="transparent-btn">
+        <i class="fa fa-sign-out"></i>
+    </button>`;
+    document.querySelector("#logout-button").addEventListener("click", onLogout);
 }
 
 function removeUserInfo() {
@@ -93,7 +107,10 @@ function renderFlightCriteria() {
     }).map(function(toCity){
         return `<option value="${toCity}">${toCity}</option>`
     }).join("\n")
-    
+
+    const travelStandardOptions = TRAVEL_STANDARDS.map(function(travelStandard) {
+        return `<option value="${travelStandard}">${travelStandard}</option>`
+    }).join("\n")
 
     document.querySelector("#flight-criteria").innerHTML =
     `<div class="city">
@@ -108,6 +125,12 @@ function renderFlightCriteria() {
             <select id="to-city" class="subject" name="subject">
                 <option value=""></option>
                 ${toCitiesOptions}
+            </select>
+            <br>
+            Taryfa
+            <select id="travel-standard" class="subject" name="subject">
+                <option value=""></option>
+                ${travelStandardOptions}
             </select>
             <br>
             Data
@@ -166,6 +189,7 @@ function renderFlightCriteria() {
       document.querySelector("#from-city").addEventListener("change",  handleCriteriaChange);
       document.querySelector("#to-city").addEventListener("change", handleCriteriaChange);
       document.querySelector("#flight-date").addEventListener("change", handleCriteriaChange);
+      document.querySelector("#travel-standard").addEventListener("change", handleCriteriaChange);
 
 
 }
@@ -175,15 +199,19 @@ function removeFlightCriteria() {
     document.querySelector("#flight-criteria").innerHTML = "";
 }
 
-let chosenAirplane = null;
+
 function handleCriteriaChange() {
     const fromCity = document.querySelector("#from-city").value;
     const toCity = document.querySelector("#to-city").value;
+    const travelStandard = document.querySelector("#travel-standard").value;
     const flightDate = document.querySelector("#flight-date").value;
+
     const flightDetails = document.querySelector("#flight-details");
-   
+
+    selectedSeats = [];
+    selectedBags = [];
  
-    if(fromCity === "" || toCity === ""){
+    if(fromCity === "" || toCity === "" || travelStandard === ""){
         flightDetails.innerHTML="Wybierz wszystkie kryteria wyszukiwania.";
     } else{
         let chosenFlight = null;
@@ -198,7 +226,10 @@ function handleCriteriaChange() {
         if (chosenFlight !== null) {
             renderSeatsPicker();
             renderBagPicker();
-        } 
+        } else {
+            removeSeatsPicker();
+            removeBagPicker();
+        }
         renderFlightDetails(chosenFlight);
     }
         
@@ -242,7 +273,6 @@ function renderSeatsPicker() {
     })
 }
 
-const selectedSeats = [];
 function handleSelectSeat(event){
     const seatNumber = event.target.id;
     const seatNumberIndex = selectedSeats.indexOf(seatNumber);
@@ -250,15 +280,16 @@ function handleSelectSeat(event){
     const seatsDocument = airplaneElement.contentDocument;
     const seatsElements = seatsDocument.querySelector("#seats");
     let seat = seatsElements.querySelector(`#${seatNumber}`);
+    const premiumClass = document.querySelector("#premium");
     if(seatNumberIndex === -1){
         seat.style["fill"] = "green";
         if (selectedSeats.length < 9) {
-            selectedSeats.push(seatNumber);
+            selectedSeats.push(seatNumber)
         } else {
             alert("Nie można wybrać więcej niż 9 miejsc")
         }
 
-    }else{
+    } else {
         selectedSeats.splice(seatNumberIndex, 1);
         seat.style["fill"] = "#f2f2f2";
     }
@@ -292,25 +323,27 @@ function removeSeatsPicker() {
     document.querySelector("#seats-picker").innerHTML = "";
 }
 
-const selectedBags = [];
+
 
 function renderBagPicker() {
     document.querySelector("#bag-picker").innerHTML =
-    `<div>
-        <object id="minibag" class="bag" data="${minibag}" type="image/svg+xml"></object>
-        <span>Bagaż podręczny od 5 kg: w cenie </span>
-    </div>
-    <div>
-    <object id="smallbag" class="bag" data="${smallbag}" type="image/svg+xml"></object>
-    <span>Bagaż mały od 10 kg: 50,00 zł </span>
-    </div>
-    <div>
-    <object id="mediumbag" class="bag" data="${mediumbag}" type="image/svg+xml"></object>
-    <span>Bagaż średni od 20 kg: 100,00 zł </span>
-    </div>
-    <div>
-    <object id="bigbag" class="bag" data="${bigbag}" type="image/svg+xml"></object>
-    <span>Bagaż duży powyżej 20 kg (max 30kg): 200,00 zł </span>
+    `<div class="bags">
+        <div class="bag-wrapper">
+            <object id="minibag" class="bag" data="${minibag}" type="image/svg+xml"></object>
+            <span>Bagaż podręczny </span>
+        </div>
+        <div class="bag-wrapper">
+            <object id="smallbag" class="bag" data="${smallbag}" type="image/svg+xml"></object>
+            <span>Bagaż mały </span>
+        </div>
+        <div class="bag-wrapper">
+            <object id="mediumbag" class="bag" data="${mediumbag}" type="image/svg+xml"></object>
+            <span>Bagaż średni </span>
+        </div>
+        <div class="bag-wrapper">
+            <object id="bigbag" class="bag" data="${bigbag}" type="image/svg+xml"></object>
+            <span>Bagaż duży </span>
+        </div>
     </div>`;
 
     const bags = document.querySelectorAll(".bag");
@@ -340,3 +373,4 @@ function handleSelectBag(event) {
         bag.style.backgroundColor = "#f0f0f0";
     }
 }
+

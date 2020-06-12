@@ -66,8 +66,9 @@ function removeUserInfo() {
 }
 
 function renderLoginWrapper() {
-    document.querySelector("#login-wrapper").innerHTML = 
-    `<div class="login-box"> 
+    const loginWrapper = document.querySelector("#login-wrapper");
+    loginWrapper.innerHTML = 
+    `<div id="login-box"> 
         <h1>Logowanie</h1>
         <form id="login-form">
             <input id="login" class="input-element" type="text" placeholder="login">
@@ -80,11 +81,13 @@ function renderLoginWrapper() {
             </button>
         </form>
     </div>`;
+    loginWrapper.style.display = "flex";
     document.querySelector("#login-form").addEventListener("submit", onLogin);
 }
 
 function removeLoginWrapper() {
-    document.querySelector("#login-wrapper").innerHTML = "";
+    const loginWrapper = document.querySelector("#login-wrapper");
+    loginWrapper.style.display = "none";
 }
 
 function renderFlightCriteria() {

@@ -204,23 +204,42 @@ header {
 
     }
 }
+
 .selected-seat {
     fill: rgb(23, 93, 243);
 }
 
+#bag-details {
+    display: none;
+    margin: 50px auto;
+    width: 80%;
+    padding: 15px;
+    background-color: rgb(26, 71, 167);
+    color: white;
+    text-align: center;
+}
+
+#bag-picker {
+    margin: 0 auto;
+    width: 60%;
+}
+
 .bags {
     display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
+
 .bag-wrapper {
-    width: 80px;
+    width: 200px;
     text-align: center;
 }
 
 .bag {
     background-color: #f0f0f0;
     border: 3px solid #1a1a1a;
-    width: 60px;
-    height: 60px;
+    width: 160px;
+    height: 160px;
     display: block;
     margin: 0 auto;
 
@@ -229,4 +248,22 @@ header {
 
 .bag:hover {
     background-color: #cccccc;
+}
+
+#summary {
+    display: none;
+    margin: 50px auto;
+    width: 80%;
+    padding: 15px;
+    background-color: rgb(26, 71, 167);
+    color: white;
+    text-align: center;
+}
+
+#summary ul {
+    text-align: left;
+}
+
+#summary ul li {
+    margin: 10px 0;
 }

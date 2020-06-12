@@ -33,7 +33,7 @@
         "time": "14:00",
         "duration": 1,
         "airplane": "Bombardier",
-        "cena": 300,
+        "price": 300,
         "travelStandard": ["Standard"]
     },
     {

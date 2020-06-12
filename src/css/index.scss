@@ -49,11 +49,11 @@ header {
     background: none;
     border: none;
     outline: none;
+    cursor: pointer;
     color: rgb(240, 240, 240);
 
     :hover {
-        color: rgb(221, 221, 221);
-        cursor: pointer;
+        color: rgb(199, 199, 199);
     }
 }
 
@@ -97,7 +97,11 @@ header {
 
 .btn:hover {
     border: none;
-    color: rgb(230, 221, 221);
+    color: rgb(71, 71, 71);
+}
+
+.icon {
+    color: black;
 }
 
 .criteria-form {
@@ -126,11 +130,10 @@ header {
     }
 }
 
-.subject {
+.criteria select, .criteria input {
     font-size: 20px;
     border: 0px;
     width: 100%;
-    text-align: center;
     padding: 4px 0;
     margin: 6px 0px;
     border-radius: 5px;
@@ -138,14 +141,25 @@ header {
     border: 1px solid grey;
 }
 
-.option-element {
-    font-size: 20px;
-    font-weight: bold;
-    width: 100%;
+#flight-details {
+    margin: 0 auto;
+    font-size: 14pt;
+    width: 80%;
+    padding: 5px 30px;
     text-align: center;
-    display: block;
-    margin: auto;
-    border-radius: 5px;
+    color: white;
+    background-color: rgb(26, 71, 167);
+}
+
+.confirm-btn {
+    background: none;
+    border: none;
+    color: white;
+    outline: none;
+    cursor: pointer;
+    font-size: 12pt;
+    padding: 6px;
+    margin: 5px 0;
 }
 
 .number-of {
@@ -158,7 +172,16 @@ header {
     outline: none;
 }
 
-#seats-picker-wrapper{
+#seats-details {
+    display: none;
+    margin: 50px auto;
+    width: 80%;
+    padding: 15px;
+    background-color: rgb(26, 71, 167);
+    color: white;
+}
+
+#seats-picker-wrapper {
     text-align: center;
 }
 
@@ -166,8 +189,8 @@ header {
     background-color: white;
     display: inline-block;
     transform: rotate(90deg) scale(1.4) scaleX(2.0);
-    
 }
+
 #airplane {
     margin: 0 auto;
     display: block;

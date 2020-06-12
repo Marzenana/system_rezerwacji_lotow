@@ -13,8 +13,7 @@ header {
     display: flex;
     justify-content: space-between;
     padding: 0 15px;
-    background-color: rgb(23, 93, 243);
-    
+    background-color: rgb(12, 52, 139);
 }
 
 .input-element {
@@ -27,7 +26,7 @@ header {
     border-color: white;
     background:white;
     outline: none;
-  }
+}
 
 #logo {
     float: left;
@@ -96,33 +95,47 @@ header {
     cursor: pointer;
 }
 
-.btn:hover{
+.btn:hover {
     border: none;
     color: rgb(230, 221, 221);
+}
 
+.criteria-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+    margin: 0 auto;
+    width: 80%;
+    background-color: rgb(21, 64, 156);
+    margin-top: 5vh;
+    padding: 20px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.criteria {
+    width: calc(50% - 20px);
+    padding: 5px 10px;
+}
+
+@media screen and (max-width: 767px) {
+    .criteria {
+        width: 100%;
+    }
 }
 
 .subject {
     font-size: 20px;
     border: 0px;
-    width: 15%;
+    width: 100%;
     text-align: center;
     padding: 4px 0;
     margin: 6px 0px;
     border-radius: 5px;
     outline: none;
     border: 1px solid grey;
-
-}
-
-.city{
-    font-size: 20px;
-    font-weight: bold;
-    width: 100%;
-    text-align: center;
-    padding: 5px;
-    margin-top: 20vh;
-    
 }
 
 .option-element {
@@ -134,6 +147,7 @@ header {
     margin: auto;
     border-radius: 5px;
 }
+
 .number-of {
     font-size: 20px;
     border: 0px;
@@ -147,6 +161,7 @@ header {
 #seats-picker-wrapper{
     text-align: center;
 }
+
 #seats-picker {
     background-color: white;
     display: inline-block;
@@ -167,7 +182,7 @@ header {
     }
 }
 .selected-seat {
-    fill: red;
+    fill: rgb(23, 93, 243);
 }
 
 .bags {

@@ -116,29 +116,34 @@ function renderFlightCriteria() {
     }).join("\n")
 
     document.querySelector("#flight-criteria").innerHTML =
-    `<div class="city">
-        <div>
-            Z
+    `<div class="criteria-form">
+        <div class="criteria">
+            <label for="from-city">Z</label>
             <select id="from-city"class="subject" name="subject">
                 <option value=""></option>
                 ${fromCitiesOptions}
             </select>
-        
-            Do
+        </div>
+    
+        <div class="criteria">
+            <label for="to-city">Do</label>
             <select id="to-city" class="subject" name="subject">
                 <option value=""></option>
                 ${toCitiesOptions}
             </select>
-            <br>
-            Taryfa
+        </div>
+
+        <div class="criteria">
+            <label for="travel-standard">Taryfa</label>
             <select id="travel-standard" class="subject" name="subject">
                 <option value=""></option>
                 ${travelStandardOptions}
             </select>
-            <br>
-            Data
-            <input id="flight-date" class="subject" type="text" name="flight-date" value="06/06/2020"/>
-            <br>
+        </div>
+
+        <div class="criteria">
+            <label for="flight-date">Data</label>
+            <input id="flight-date" class="subject" type="text" name="flight-date" />
         </div>
     </div>`;
 

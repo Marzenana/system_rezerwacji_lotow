@@ -188,7 +188,7 @@ header {
 #seats-picker {
     background-color: white;
     display: inline-block;
-    transform: rotate(90deg) scale(1.4) scaleX(2.0);
+    margin: 60px auto;
 }
 
 #airplane {
@@ -198,9 +198,9 @@ header {
 
 @media screen and (max-width: 767px) {
     #seats-picker {
-        transform: scale(1.0) scaleX(2.0);
-        margin: 0 auto;
+        transform: rotate(270deg); 
         display: block;
+        margin-top: 550px;
 
     }
 }
@@ -211,7 +211,7 @@ header {
 
 #bag-details {
     display: none;
-    margin: 50px auto;
+    margin: 30px auto;
     width: 80%;
     padding: 15px;
     background-color: rgb(26, 71, 167);
@@ -233,6 +233,7 @@ header {
 .bag-wrapper {
     width: 200px;
     text-align: center;
+    margin: 10px;
 }
 
 .bag {

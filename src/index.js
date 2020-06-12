@@ -288,6 +288,8 @@ function handleConfirmCriteria() {
 }
 
 function renderSeatsPicker() {
+    const seatsPicker = document.querySelector("#seats-picker")
+    seatsPicker.style.display = "block";
     let airplane = null;
     if(chosenAirplane === "Bombardier") {
         airplane = bombardier;
@@ -296,7 +298,7 @@ function renderSeatsPicker() {
     } else if(chosenAirplane === "Boeing 787 Dreamliner"){
         airplane = boeing787Dreamliner;
     }
-    document.querySelector("#seats-picker").innerHTML = 
+    seatsPicker.innerHTML = 
     `<div>
         <object id="airplane" data="${airplane}" type="image/svg+xml"></object>
     </div>`;
@@ -404,7 +406,7 @@ function handleMouseOutSeat(event){
 }
 
 function removeSeatsPicker() {
-    document.querySelector("#seats-picker").innerHTML = "";
+    document.querySelector("#seats-picker").style.display = "none";
 }
 
 function renderBagDetails() {
@@ -480,7 +482,7 @@ function handleSelectBag(event) {
     const bag = document.querySelector(`#${bagId}`);
     if (bagIndex === -1) {
         selectedBags.push(bagId);
-        bag.style.backgroundColor = "green";
+        bag.style.backgroundColor = " rgb(26, 71, 167)"
     } else {
         selectedBags.splice(bagIndex, 1);
         bag.style.backgroundColor = "#f0f0f0";
@@ -496,11 +498,11 @@ function handleConfirmBags() {
 }
 
 function renderSummary() {
-    console.log('selectedSeats', selectedSeats);
-    console.log('chosenFlight', chosenFlight);
-    console.log('selectedBags', selectedBags);
-    console.log('chosenTravelStandard', chosenTravelStandard);
-    console.log('chosenFlightDate', chosenFlightDate);
+    // console.log('selectedSeats', selectedSeats);
+    // console.log('chosenFlight', chosenFlight);
+    // console.log('selectedBags', selectedBags);
+    // console.log('chosenTravelStandard', chosenTravelStandard);
+    // console.log('chosenFlightDate', chosenFlightDate);
 
     const bagNames = selectedBags.map(bagId => BAG_ID_TO_NAME[bagId]);
     const bagPrices = selectedBags.map(bagId => BAG_ID_TO_PRICE[bagId]);
@@ -527,8 +529,8 @@ function renderSummary() {
         <h1>Podsumowanie zamówienia.</h1>
         <ul>
             <li>Wylot z ${chosenFlight.fromCity} do ${chosenFlight.toCity} dnia ${chosenFlightDate} o godzinie ${chosenFlight.time}, czas trwania lotu: ${chosenFlight.duration} h.</li>
-            <li>Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost}.</li>
-            <li>Wybrane rodzaje bagaży: ${bagNames.join(", ")} za łączną cenę ${totalBagsPrice}</li>
+            <li>Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.</li>
+            <li>Wybrane rodzaje bagaży: ${bagNames.join(", ")} za łączną cenę ${totalBagsPrice} zł</li>
         </div>
         <button id="confirm-reservation" class="confirm-btn">
             <i class="fas fa-plane-departure"></i>

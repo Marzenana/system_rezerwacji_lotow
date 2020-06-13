@@ -30,7 +30,6 @@ const BAG_ID_TO_PRICE = {
 // Global state
 
 let selectedSeats = [];
-let chosenAirplane = null;
 let chosenFlight = null;
 let selectedBags = [];
 
@@ -70,8 +69,6 @@ function onLogout() {
     removeBagPicker();
     removeSummary();
 }
-
-// Rendereres
 
 function renderUserInfo(user) {
     document.querySelector("#user-info").innerHTML = 
@@ -170,8 +167,8 @@ function renderFlightCriteria() {
     </div>`;
 
     const today = new Date();
-    const year = today.getFullYear(), month = today.getDate(), day = today.getDate();
-    const maxDate = new Date(year + 1, month -3, day -1);
+    const year = today.getFullYear(), month = today.getMonth(), day = today.getDate();
+    const maxDate = new Date(year + 1, month, day - 1);
     
     $('input[name="flight-date"]').daterangepicker({
         "locale": {
@@ -211,10 +208,7 @@ function renderFlightCriteria() {
         showDropdowns: true,
         minDate: today,
         maxDate,
-      }, function(date){
-          console.log(date);
       });
- 
 
       document.querySelector("#from-city").addEventListener("change",  handleCriteriaChange);
       document.querySelector("#to-city").addEventListener("change", handleCriteriaChange);
@@ -247,20 +241,17 @@ function handleCriteriaChange() {
                 chosenFlight = flight
             }
         }
-        chosenAirplane = chosenFlight ? chosenFlight.airplane : null;
-    
-        renderFlightDetails(chosenFlight);
+        renderFlightDetails();
     }
-        
 }
 
-function renderFlightDetails(flight) {
+function renderFlightDetails() {
     const flightDetails = document.querySelector("#flight-details");
     flightDetails.style.display = "block";
-    if(flight != null){
+    if(chosenFlight != null){
         flightDetails.innerHTML = 
         `<div>
-            <p>Lot odbywają się codziennie o ${flight.time}. Czas trwania lotu: ${flight.duration} h.</p>
+            <p>Lot odbywają się codziennie o ${chosenFlight.time}. Czas trwania lotu: ${chosenFlight.duration} h.</p>
             <button id="confirm-criteria-btn" class="confirm-btn">
                 <i class="fa fa-plane" aria-hidden="true"></i>
                 Przejdź do wyboru miejsc
@@ -274,7 +265,6 @@ function renderFlightDetails(flight) {
 
 function removeFlightDetails() {
     document.querySelector("#flight-details").style.display = "none";
-
 }
 
 function handleConfirmCriteria() {
@@ -291,11 +281,11 @@ function renderSeatsPicker() {
     const seatsPicker = document.querySelector("#seats-picker")
     seatsPicker.style.display = "block";
     let airplane = null;
-    if(chosenAirplane === "Bombardier") {
+    if(chosenFlight.airplane === "Bombardier") {
         airplane = bombardier;
-    } else if(chosenAirplane === "Boeing 737"){
+    } else if(chosenFlight.airplane === "Boeing 737"){
         airplane = boeing737;
-    } else if(chosenAirplane === "Boeing 787 Dreamliner"){
+    } else if(chosenFlight.airplane === "Boeing 787 Dreamliner"){
         airplane = boeing787Dreamliner;
     }
     seatsPicker.innerHTML = 
@@ -322,7 +312,6 @@ function handleSelectSeat(event){
     const seatsDocument = airplaneElement.contentDocument;
     const seatsElements = seatsDocument.querySelector("#seats");
     let seat = seatsElements.querySelector(`#${seatNumber}`);
-    const premiumClass = document.querySelector("#premium");
     if(seatNumberIndex === -1){
         seat.style["fill"] = "green";
         if (selectedSeats.length < 9) {
@@ -330,14 +319,10 @@ function handleSelectSeat(event){
         } else {
             alert("Nie można wybrać więcej niż 9 miejsc")
         }
-
     } else {
         selectedSeats.splice(seatNumberIndex, 1);
         seat.style["fill"] = "#f2f2f2";
     }
-    console.log('seatNumber', seatNumber);
-    console.log('selectedSeats', selectedSeats)
-
     renderSeatsDetails();
 } 
 
@@ -352,7 +337,6 @@ function renderSeatsDetails() {
            numberOfStandardSeats++;
        }
     });
-    console.log(chosenFlight)
     const totalCost = numberOfStandardSeats * chosenFlight.price + numberOfPremiumSeats * (chosenFlight.pricePremium || 0);
 
     const confirmSeatsButton =
@@ -360,7 +344,7 @@ function renderSeatsDetails() {
         <i class="fa fa-suitcase" aria-hidden="true"></i>
         Przejdź do wyboru bagażów
     </button>`;
-    
+
     document.querySelector("#seats-details").innerHTML =
     `<div>
         <span>Wybrano ${selectedSeats.length} miejsc (${numberOfStandardSeats} standard, ${numberOfPremiumSeats} premium) za łączną kwotę: ${totalCost} zł.</span>
@@ -383,18 +367,17 @@ function handleConfirmSeats() {
     removeSummary();
 }
 
-function handleMouseOverSeat(event){
+function handleMouseOverSeat(event) {
     const seatNumber = event.target.id;
-    const seatNumberIndex = selectedSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
     const seatsDocument = airplaneElement.contentDocument;
     const seatsElements = seatsDocument.querySelector("#seats");
     let seat = seatsElements.querySelector(`#${seatNumber}`);
 
     seat.style["fill"] = "blue";
-
 }
-function handleMouseOutSeat(event){
+
+function handleMouseOutSeat(event) {
     const seatNumber = event.target.id;
     const seatNumberIndex = selectedSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
@@ -434,7 +417,6 @@ function renderBagDetails() {
     } else {
         bagDetails.innerHTML = `<span>Wybierz rodzaje bagaży aby kontynuować.</span>`
     }
-    
 }
 
 function removeBagDetails() {
@@ -465,8 +447,6 @@ function renderBagPicker() {
     const bags = document.querySelectorAll(".bag");
     bags.forEach(bag => {
         bag.addEventListener("load", function() {
-            console.log("Loaded")
-            console.log(bag)
             bag.contentDocument.addEventListener("click", handleSelectBag);
         });
     });
@@ -498,12 +478,6 @@ function handleConfirmBags() {
 }
 
 function renderSummary() {
-    // console.log('selectedSeats', selectedSeats);
-    // console.log('chosenFlight', chosenFlight);
-    // console.log('selectedBags', selectedBags);
-    // console.log('chosenTravelStandard', chosenTravelStandard);
-    // console.log('chosenFlightDate', chosenFlightDate);
-
     const bagNames = selectedBags.map(bagId => BAG_ID_TO_NAME[bagId]);
     const bagPrices = selectedBags.map(bagId => BAG_ID_TO_PRICE[bagId]);
     let totalBagsPrice = 0;
@@ -520,17 +494,20 @@ function renderSummary() {
            numberOfStandardSeats++;
        }
     });
+    
     const totalSeatsCost = numberOfStandardSeats * chosenFlight.price + numberOfPremiumSeats * (chosenFlight.pricePremium || 0);
 
     let summary = document.querySelector("#summary");
     summary.style.display = "block";
     summary.innerHTML = 
     `<div>
-        <h1>Podsumowanie zamówienia.</h1>
+        <h1>Podsumowanie zamówienia:</h1>
         <ul>
             <li>Wylot z ${chosenFlight.fromCity} do ${chosenFlight.toCity} dnia ${chosenFlightDate} o godzinie ${chosenFlight.time}, czas trwania lotu: ${chosenFlight.duration} h.</li>
             <li>Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.</li>
-            <li>Wybrane rodzaje bagaży: ${bagNames.join(", ")} za łączną cenę ${totalBagsPrice} zł</li>
+            <li>Wybrana taryfa lotu to: ${chosenTravelStandard}. Promocyjny koszt taryfy 9.99 zł.</li>
+            <li>Wybrane rodzaje bagaży: ${bagNames.join(", ")} za łączną cenę ${totalBagsPrice} zł.</li>
+            <li><b>Łączny koszt lotu: ${totalSeatsCost + totalBagsPrice + 9.99} zł.</b></li>
         </div>
         <button id="confirm-reservation" class="confirm-btn">
             <i class="fas fa-plane-departure"></i>

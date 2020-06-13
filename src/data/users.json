@@ -12,12 +12,5 @@
         "password": "haslo2",
         "firstName": "Anna",
         "lastName": "Nowak"
-    },
-    {
-        "email": "logan@xyz.pl",
-        "login": "",
-        "password": "",
-        "firstName": "Logan",
-        "lastName": "Pauul"
     }
 ]

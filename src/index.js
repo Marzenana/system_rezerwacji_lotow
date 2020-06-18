@@ -38,7 +38,7 @@ let chosenFlightDate = null;
 
 // Login
 
-renderLoginWrapper();
+showLoginWrapper();
 
 function onLogin(event) {
     event.preventDefault();
@@ -49,7 +49,7 @@ function onLogin(event) {
         if(login === user.login && password === user.password) {
             renderUserInfo(user);
             setTimeout(onLogout, 180000);
-            removeLoginWrapper();
+            hideLoginWrapper();
             renderFlightCriteria();
             return;
         }
@@ -59,7 +59,7 @@ function onLogin(event) {
 
 function onLogout() {
     removeUserInfo();
-    renderLoginWrapper();
+    showLoginWrapper();
     removeFlightCriteria();
     removeFlightDetails();
     removeSeatsPicker();
@@ -84,27 +84,13 @@ function removeUserInfo() {
     document.querySelector("#user-info").innerHTML = "";
 }
 
-function renderLoginWrapper() {
+function showLoginWrapper() {
     const loginWrapper = document.querySelector("#login-wrapper");
-    loginWrapper.innerHTML = 
-    `<div id="login-box"> 
-        <h1>Logowanie</h1>
-        <form id="login-form">
-            <input id="login" class="input-element" type="text" placeholder="login">
-            <i class="fas fa-user icon"></i>
-            <input id="password" class="input-element" type="password" placeholder="hasło">
-            <i class="fas fa-lock icon"></i>
-            <button id="btn" class="btn" type="submit">
-                <i class="fas fa-sign-in-alt"></i>
-                Zaloguj się
-            </button>
-        </form>
-    </div>`;
     loginWrapper.style.display = "flex";
-    document.querySelector("#login-form").addEventListener("submit", onLogin);
+    document.querySelector("#login-form").onsubmit = onLogin;
 }
 
-function removeLoginWrapper() {
+function hideLoginWrapper() {
     const loginWrapper = document.querySelector("#login-wrapper");
     loginWrapper.style.display = "none";
 }

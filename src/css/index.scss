@@ -145,7 +145,7 @@ header {
     border: 1px solid grey;
 }
 
-#flight-details {
+.details-box {
     margin: 0 auto;
     font-size: 14pt;
     width: 80%;
@@ -153,6 +153,11 @@ header {
     text-align: center;
     color: white;
     background-color: rgb(26, 71, 167);
+}
+
+#select-criterias-warning, #selected-criterias-info {
+    display: none;
+
 }
 
 .confirm-btn {

@@ -65,7 +65,7 @@ function onLogout() {
     removeUserInfo();
     showLoginWrapper();
     hideFlightCriteria();
-    removeFlightDetails();
+    hideSelectedCriteriasInfo();
     removeSeatsPicker();
     removeBagPicker();
     removeSeatsDetails();
@@ -208,13 +208,11 @@ function handleCriteriaChange() {
     const toCity = document.querySelector("#to-city").value;
     const travelStandard = document.querySelector("#travel-standard").value;
 
-    const flightDetails = document.querySelector("#flight-details");
-
     selectedSeats = [];
     selectedBags = [];
  
     if (fromCity === "" || toCity === "" || travelStandard === "") {
-        flightDetails.innerHTML = "Wybierz wszystkie kryteria wyszukiwania.";
+        showSelectCriteriasWarning();
     } else {
         chosenFlight = null;
         for(let i=0; i < flights.length; i++){
@@ -223,30 +221,32 @@ function handleCriteriaChange() {
                 chosenFlight = flight
             }
         }
-        renderFlightDetails();
+        showSelectedCriteriasInfo();
+        hideSelectCriteriasWarning();
     }
     renderFromCityOptions(FROM_CITIES.filter(city => city != toCity), fromCity);
     renderToCityOptions(TO_CITITES.filter(city => city != fromCity), toCity);
 }
 
-function renderFlightDetails() {
-    const flightDetails = document.querySelector("#flight-details");
-    flightDetails.style.display = "block";
-    if(chosenFlight != null){
-        flightDetails.innerHTML = 
-        `<div>
-            <p>Lot odbywają się codziennie o ${chosenFlight.time}. Czas trwania lotu: ${chosenFlight.duration} h.</p>
-            <button id="confirm-criteria-btn" class="confirm-btn">
-                <i class="fa fa-plane" aria-hidden="true"></i>
-                Przejdź do wyboru miejsc
-            </button>
-        </div>`;
-        document.querySelector("#confirm-criteria-btn").addEventListener("click", handleConfirmCriteria);
+function showSelectCriteriasWarning() {
+    document.querySelector("#select-criterias-warning").style.display = "block";
+}
+
+function hideSelectCriteriasWarning() {
+    document.querySelector("#select-criterias-warning").style.display = "none";
+}
+
+function showSelectedCriteriasInfo() {
+    const selectedCriteriasInfo = document.querySelector("#selected-criterias-info");
+    selectedCriteriasInfo.style.display = "block";
+    if (chosenFlight != null) {
+        selectedCriteriasInfo.querySelector("p").innerText = `Lot odbywają się codziennie o ${chosenFlight.time}. Czas trwania lotu: ${chosenFlight.duration} h.`;
+        document.querySelector("#confirm-criteria-btn").onclick = handleConfirmCriteria;
     } 
 } 
 
-function removeFlightDetails() {
-    document.querySelector("#flight-details").style.display = "none";
+function hideSelectedCriteriasInfo() {
+    document.querySelector("#selected-criterias-info").style.display = "none";
 }
 
 function handleConfirmCriteria() {
@@ -254,7 +254,7 @@ function handleConfirmCriteria() {
     chosenFlightDate = document.querySelector("#flight-date").value;
 
     hideFlightCriteria();
-    removeFlightDetails();
+    hideSelectedCriteriasInfo();
     renderSeatsDetails();
     renderSeatsPicker();
 }

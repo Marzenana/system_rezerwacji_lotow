@@ -11,6 +11,10 @@ import bigbag from "./bag/bigbag.svg";
 
 // Constants
 
+const FROM_CITIES = flights.map(flight => flight.fromCity).filter((value, index, array) => array.indexOf(value) === index);
+
+const TO_CITITES = flights.map(flight => flight.toCity).filter((value, index, array) => array.indexOf(value) === index);
+
 const TRAVEL_STANDARDS = ["Classic", "Comfort"]
 
 const BAG_ID_TO_NAME = {
@@ -99,41 +103,33 @@ function showFlightCriteria() {
     const flightCriteria = document.querySelector("#flight-criteria");
     flightCriteria.style.display = "block";
 
-    renderFromCityOptions();
-    renderToCityOptions();
+    renderFromCityOptions(FROM_CITIES);
+    renderToCityOptions(TO_CITITES);
     renderTravelStandardOptions();
     renderFlightDate();
 }
 
-function renderFromCityOptions() {
+function renderFromCityOptions(cities, selectedCity = "") {
     const fromCitySelect = document.querySelector("#from-city");
     fromCitySelect.innerHTML = ""; 
     fromCitySelect.appendChild(createSelectOption(""));
-    const fromCities = flights.map(function(flight){
-        return flight.fromCity;
-    }).filter(function(value,index,array){
-        return array.indexOf(value) === index;
-    })
-    fromCities.forEach(function(fromCity){
+    cities.forEach(function(fromCity){
         const option = createSelectOption(fromCity);
         fromCitySelect.appendChild(option);
     })
+    fromCitySelect.value = selectedCity;
     fromCitySelect.onclick = handleCriteriaChange;
 }
 
-function renderToCityOptions() {
+function renderToCityOptions(cities, selectedCity = "") {
     const toCitySelect = document.querySelector("#to-city");
     toCitySelect.innerHTML = "";
     toCitySelect.appendChild(createSelectOption(""));
-    const toCities = flights.map(function(flight) {
-        return flight.toCity;
-    }).filter(function(value, index, array) {
-        return array.indexOf(value) === index;
-    })
-    toCities.forEach(function(toCity) {
+    cities.forEach(function(toCity) {
         const option = createSelectOption(toCity);
         toCitySelect.appendChild(option);
     })
+    toCitySelect.value = selectedCity;
     toCitySelect.onclick = handleCriteriaChange;
 }
 
@@ -229,6 +225,8 @@ function handleCriteriaChange() {
         }
         renderFlightDetails();
     }
+    renderFromCityOptions(FROM_CITIES.filter(city => city != toCity), fromCity);
+    renderToCityOptions(TO_CITITES.filter(city => city != fromCity), toCity);
 }
 
 function renderFlightDetails() {
@@ -244,9 +242,7 @@ function renderFlightDetails() {
             </button>
         </div>`;
         document.querySelector("#confirm-criteria-btn").addEventListener("click", handleConfirmCriteria);
-    } else {
-        flightDetails.innerHTML="Wybrana opcja nie jest dostępna. Zmień kryteria wyszukiwania.";
-    }
+    } 
 } 
 
 function removeFlightDetails() {

@@ -99,11 +99,16 @@ function showFlightCriteria() {
     const flightCriteria = document.querySelector("#flight-criteria");
     flightCriteria.style.display = "block";
 
-    const emptyOption = createSelectOption("");
+    renderFromCityOptions();
+    renderToCityOptions();
+    renderTravelStandardOptions();
+    renderFlightDate();
+}
 
+function renderFromCityOptions() {
     const fromCitySelect = document.querySelector("#from-city");
     fromCitySelect.innerHTML = ""; 
-    fromCitySelect.appendChild(emptyOption.cloneNode());
+    fromCitySelect.appendChild(createSelectOption(""));
     const fromCities = flights.map(function(flight){
         return flight.fromCity;
     }).filter(function(value,index,array){
@@ -113,28 +118,37 @@ function showFlightCriteria() {
         const option = createSelectOption(fromCity);
         fromCitySelect.appendChild(option);
     })
+    fromCitySelect.onclick = handleCriteriaChange;
+}
 
+function renderToCityOptions() {
     const toCitySelect = document.querySelector("#to-city");
     toCitySelect.innerHTML = "";
-    toCitySelect.appendChild(emptyOption.cloneNode());
-    const toCities = flights.map(function(flight){
+    toCitySelect.appendChild(createSelectOption(""));
+    const toCities = flights.map(function(flight) {
         return flight.toCity;
-    }).filter(function(value,index,array){
-        return array.indexOf(value) === index
+    }).filter(function(value, index, array) {
+        return array.indexOf(value) === index;
     })
-    toCities.forEach(function(toCity){
+    toCities.forEach(function(toCity) {
         const option = createSelectOption(toCity);
         toCitySelect.appendChild(option);
     })
+    toCitySelect.onclick = handleCriteriaChange;
+}
 
+function renderTravelStandardOptions() {
     const travelOptionSelect = document.querySelector("#travel-standard");
     travelOptionSelect.innerHTML = "";
-    travelOptionSelect.appendChild(emptyOption.cloneNode());
+    travelOptionSelect.appendChild(createSelectOption(""));
     TRAVEL_STANDARDS.forEach(function(travelStandard) {
         const option = createSelectOption(travelStandard);
         travelOptionSelect.appendChild(option);
     })
+    travelOptionSelect.onclick = handleCriteriaChange;
+}
 
+function renderFlightDate() {
     const flightDateSelect = document.querySelector("#flight-date")
     const today = new Date();
     const year = today.getFullYear(), month = today.getMonth(), day = today.getDate();
@@ -179,11 +193,7 @@ function showFlightCriteria() {
         minDate: today,
         maxDate,
       });
-
-      const selects = [fromCitySelect, toCitySelect, travelOptionSelect, flightDateSelect]
-      selects.forEach(select => {
-          select.onclick = handleCriteriaChange;
-      });
+      flightDateSelect.onclick = handleCriteriaChange;
 }
 
 function createSelectOption(value) {
@@ -201,16 +211,15 @@ function handleCriteriaChange() {
     const fromCity = document.querySelector("#from-city").value;
     const toCity = document.querySelector("#to-city").value;
     const travelStandard = document.querySelector("#travel-standard").value;
-    const flightDate = document.querySelector("#flight-date").value;
 
     const flightDetails = document.querySelector("#flight-details");
 
     selectedSeats = [];
     selectedBags = [];
  
-    if(fromCity === "" || toCity === "" || travelStandard === ""){
-        flightDetails.innerHTML="Wybierz wszystkie kryteria wyszukiwania.";
-    } else{
+    if (fromCity === "" || toCity === "" || travelStandard === "") {
+        flightDetails.innerHTML = "Wybierz wszystkie kryteria wyszukiwania.";
+    } else {
         chosenFlight = null;
         for(let i=0; i < flights.length; i++){
             const flight = flights[i]
@@ -485,7 +494,7 @@ function renderSummary() {
             <li>Wybrana taryfa lotu to: ${chosenTravelStandard}. Promocyjny koszt taryfy 9.99 zł.</li>
             <li>Wybrane rodzaje bagaży: ${bagNames.join(", ")} za łączną cenę ${totalBagsPrice} zł.</li>
             <li><b>Łączny koszt lotu: ${totalSeatsCost + totalBagsPrice + 9.99} zł.</b></li>
-        </div>
+        </ul>
         <button id="confirm-reservation" class="confirm-btn">
             <i class="fas fa-plane-departure"></i>
             Potwierdź rezerwację i wyloguj

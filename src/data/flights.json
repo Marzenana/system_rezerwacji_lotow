@@ -6,7 +6,7 @@
         "duration": 2,
         "airplane": "Boeing 737",
         "price": 550,
-        "travelStandard": ["Standard"]
+        "travelStandard": ["Classic"]
     },
     {
         "fromCity": "Wrocław",
@@ -16,7 +16,7 @@
         "airplane": "Boeing 787 Dreamliner",
         "price": 1000,
         "pricePremium": 2500,
-        "travelStandard": ["Standard", "Premium"]
+        "travelStandard": ["Classic", "Comfort"]
     },
     {
         "fromCity": "Wrocław",
@@ -25,7 +25,7 @@
         "duration": 1,
         "airplane": "Bombardier",
         "price": 250,
-        "travelStandard": ["Standard"]
+        "travelStandard": ["Classic"]
     }, 
     {
         "fromCity": "Warszawa",
@@ -34,7 +34,7 @@
         "duration": 1,
         "airplane": "Bombardier",
         "price": 300,
-        "travelStandard": ["Standard"]
+        "travelStandard": ["Classic"]
     },
     {
         "fromCity": "Warszawa",
@@ -43,7 +43,7 @@
         "duration": 2.5,
         "airplane": "Boeing 737",
         "price": 500,
-        "travelStandard": ["Standard"]
+        "travelStandard": ["Classic"]
     },
     {
         "fromCity": "Warszawa",
@@ -53,6 +53,6 @@
         "airplane": "Boeing 787 Dreamliner",
         "price": 1200,
         "pricePremium": 2700,
-        "travelStandard": ["Standard", "Premium"]
+        "travelStandard": ["Classic", "Comfort"]
     }
 ]

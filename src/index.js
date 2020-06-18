@@ -11,7 +11,7 @@ import bigbag from "./bag/bigbag.svg";
 
 // Constants
 
-const TRAVEL_STANDARDS = ["Standard", "Premium"]
+const TRAVEL_STANDARDS = ["Classic", "Comfort"]
 
 const BAG_ID_TO_NAME = {
     minibag: "bagaż podręczny",

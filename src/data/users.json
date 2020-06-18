@@ -12,5 +12,12 @@
         "password": "haslo2",
         "firstName": "Anna",
         "lastName": "Nowak"
+    },
+    {
+        "email": "annanowak@xyz.pl",
+        "login": "",
+        "password": "",
+        "firstName": "Anna",
+        "lastName": "Nowak"
     }
 ]

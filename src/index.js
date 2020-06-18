@@ -50,7 +50,7 @@ function onLogin(event) {
             renderUserInfo(user);
             setTimeout(onLogout, 180000);
             hideLoginWrapper();
-            renderFlightCriteria();
+            showFlightCriteria();
             return;
         }
     }
@@ -60,7 +60,7 @@ function onLogin(event) {
 function onLogout() {
     removeUserInfo();
     showLoginWrapper();
-    removeFlightCriteria();
+    hideFlightCriteria();
     removeFlightDetails();
     removeSeatsPicker();
     removeBagPicker();
@@ -95,63 +95,47 @@ function hideLoginWrapper() {
     loginWrapper.style.display = "none";
 }
 
-function renderFlightCriteria() {
+function showFlightCriteria() {
+    const flightCriteria = document.querySelector("#flight-criteria");
+    flightCriteria.style.display = "block";
 
+    const emptyOption = createSelectOption("");
+
+    const fromCitySelect = document.querySelector("#from-city");
+    fromCitySelect.innerHTML = ""; 
+    fromCitySelect.appendChild(emptyOption.cloneNode());
     const fromCities = flights.map(function(flight){
         return flight.fromCity;
+    }).filter(function(value,index,array){
+        return array.indexOf(value) === index;
     })
-    const fromCitiesOptions = fromCities.filter(function(value,index,array){
-        return array.indexOf(value) === index
-    }).map(function(fromCity){
-        return `<option value="${fromCity}">${fromCity}</option>`
-    }).join("\n")
+    fromCities.forEach(function(fromCity){
+        const option = createSelectOption(fromCity);
+        fromCitySelect.appendChild(option);
+    })
 
+    const toCitySelect = document.querySelector("#to-city");
+    toCitySelect.innerHTML = "";
+    toCitySelect.appendChild(emptyOption.cloneNode());
     const toCities = flights.map(function(flight){
         return flight.toCity;
+    }).filter(function(value,index,array){
+        return array.indexOf(value) === index
+    })
+    toCities.forEach(function(toCity){
+        const option = createSelectOption(toCity);
+        toCitySelect.appendChild(option);
     })
 
-    const toCitiesOptions = toCities.filter(function(value,index,array){
-        return array.indexOf(value) === index
-    }).map(function(toCity){
-        return `<option value="${toCity}">${toCity}</option>`
-    }).join("\n")
+    const travelOptionSelect = document.querySelector("#travel-standard");
+    travelOptionSelect.innerHTML = "";
+    travelOptionSelect.appendChild(emptyOption.cloneNode());
+    TRAVEL_STANDARDS.forEach(function(travelStandard) {
+        const option = createSelectOption(travelStandard);
+        travelOptionSelect.appendChild(option);
+    })
 
-    const travelStandardOptions = TRAVEL_STANDARDS.map(function(travelStandard) {
-        return `<option value="${travelStandard}">${travelStandard}</option>`
-    }).join("\n")
-
-    document.querySelector("#flight-criteria").innerHTML =
-    `<div class="criteria-form">
-        <div class="criteria">
-            <label for="from-city">Z</label>
-            <select id="from-city" name="subject">
-                <option value=""></option>
-                ${fromCitiesOptions}
-            </select>
-        </div>
-    
-        <div class="criteria">
-            <label for="to-city">Do</label>
-            <select id="to-city" name="subject">
-                <option value=""></option>
-                ${toCitiesOptions}
-            </select>
-        </div>
-
-        <div class="criteria">
-            <label for="travel-standard">Taryfa</label>
-            <select id="travel-standard" name="subject">
-                <option value=""></option>
-                ${travelStandardOptions}
-            </select>
-        </div>
-
-        <div class="criteria">
-            <label for="flight-date">Data</label>
-            <input id="flight-date" class="subject" type="text" name="flight-date" />
-        </div>
-    </div>`;
-
+    const flightDateSelect = document.querySelector("#flight-date")
     const today = new Date();
     const year = today.getFullYear(), month = today.getMonth(), day = today.getDate();
     const maxDate = new Date(year + 1, month, day - 1);
@@ -196,14 +180,21 @@ function renderFlightCriteria() {
         maxDate,
       });
 
-      document.querySelector("#from-city").addEventListener("change",  handleCriteriaChange);
-      document.querySelector("#to-city").addEventListener("change", handleCriteriaChange);
-      document.querySelector("#flight-date").addEventListener("change", handleCriteriaChange);
-      document.querySelector("#travel-standard").addEventListener("change", handleCriteriaChange);
+      const selects = [fromCitySelect, toCitySelect, travelOptionSelect, flightDateSelect]
+      selects.forEach(select => {
+          select.onclick = handleCriteriaChange;
+      });
 }
 
-function removeFlightCriteria() {
-    document.querySelector("#flight-criteria").innerHTML = "";
+function createSelectOption(value) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.innerText = value;
+    return option; 
+}
+
+function hideFlightCriteria() {
+    document.querySelector("#flight-criteria").style.display = "none";
 }
 
 function handleCriteriaChange() {
@@ -257,7 +248,7 @@ function handleConfirmCriteria() {
     chosenTravelStandard = document.querySelector("#travel-standard").value;
     chosenFlightDate = document.querySelector("#flight-date").value;
 
-    removeFlightCriteria();
+    hideFlightCriteria();
     removeFlightDetails();
     renderSeatsDetails();
     renderSeatsPicker();

@@ -17,19 +17,32 @@ const TO_CITITES = flights.map(flight => flight.toCity).filter((value, index, ar
 
 const TRAVEL_STANDARDS = ["Classic", "Comfort"]
 
-const BAG_ID_TO_NAME = {
-    minibag: "bagaż podręczny",
-    smallbag: "bagaż mały",
-    mediumbag: "bagaż średni",
-    bigbag: "bagaż duży",
-}
-
-const BAG_ID_TO_PRICE = {
-    minibag: 0,
-    smallbag: 100,
-    mediumbag: 200,
-    bigbag: 300,
-}
+const BAGS = [
+    {
+        bagId: "minibag",
+        name: "bagaż podręczny",
+        price: 0,
+        image: minibag,
+    },
+    {
+        bagId: "smallbag",
+        name: "bagaż mały",
+        price: 100,
+        image: smallbag,
+    },
+    {
+        bagId: "mediumbag",
+        name: "bagaż średni",
+        price: 200,
+        image: mediumbag,
+    },
+    {
+        bagId: "bigbag",
+        name: "bagaż duży",
+        price: 300,
+        image: bigbag,
+    },
+]
 
 // Global state
 
@@ -67,10 +80,10 @@ function onLogout() {
     hideFlightCriteria();
     hideSelectedCriteriasInfo();
     hideSeatsPicker();
-    removeBagPicker();
+    hideBagPicker();
     hideSeatsDetails();
-    removeBagDetails();
-    removeBagPicker();
+    hideBagDetails();
+    hideBagPicker();
     removeSummary();
 }
 
@@ -338,8 +351,8 @@ function hideSeatsDetails() {
 function handleConfirmSeats() {
     hideSeatsDetails();
     hideSeatsPicker();
-    renderBagDetails();
-    renderBagPicker();
+    showBagDetails();
+    showBagPicker();
     removeSummary();
 }
 
@@ -364,68 +377,62 @@ function handleMouseOutSeat(event) {
     seat.style["fill"] = seatNumberIndex === -1 ? "#f2f2f2" : "green";
 }
 
-function renderBagDetails() {
+function showBagDetails() {
     let bagDetails = document.querySelector("#bag-details");
     bagDetails.style.display = "block";
+
+    const selectedBagsNames = selectedBags.map(bagId => BAGS.find(bag => bag.bagId === bagId).name);
+    let totalPrice = 0;
+    selectedBags.forEach(bagId => {
+        const bagPrice = BAGS.find(bag => bag.bagId === bagId).price;
+        totalPrice += bagPrice;
+    });
+    totalPrice *= selectedSeats.length;
+
+    const infoElement = bagDetails.querySelector("span");
+
+    const confirmBagsButton = bagDetails.querySelector("button");
+    confirmBagsButton.onclick = handleConfirmBags;
+
     if (selectedBags.length) {
-        const selectedBagsNames = selectedBags.map(bagId => BAG_ID_TO_NAME[bagId])
-        let totalPrice = 0;
-        selectedBags.forEach(bagId => {
-            const bagPrice = BAG_ID_TO_PRICE[bagId];
-            totalPrice += bagPrice;
-        });
-        totalPrice *= selectedSeats.length;
-        bagDetails.innerHTML = 
-        `<div>
-            <span>Wybrano bagaże: ${selectedBagsNames.join(", ")} za łączną cenę: ${totalPrice} zł.</span>
-            <div>
-                <button id="confirm-bags-btn" class="confirm-btn">
-                    <i class="fas fa-clipboard-check"></i>
-                    Przejdź do podsumowania rezerwacji
-                </button>
-            </div>
-        </div>`;
-        document.querySelector("#confirm-bags-btn").addEventListener("click", handleConfirmBags);
+        infoElement.innerText = `Wybrano bagaże: ${selectedBagsNames.join(", ")} za łączną cenę: ${totalPrice} zł.`;
+        confirmBagsButton.style.display = "inline";
     } else {
-        bagDetails.innerHTML = `<span>Wybierz rodzaje bagaży aby kontynuować.</span>`
+        infoElement.innerText = `Wybierz rodzaje bagaży aby kontynuować.`;
+        confirmBagsButton.style.display = "none";
     }
 }
 
-function removeBagDetails() {
+function hideBagDetails() {
     document.querySelector("#bag-details").style.display = "none";
 }
 
-function renderBagPicker() {
-    document.querySelector("#bag-picker").innerHTML =
-    `<div class="bags">
-        <div class="bag-wrapper">
-            <object id="minibag" class="bag" data="${minibag}" type="image/svg+xml"></object>
-            <span>Bagaż podręczny </span>
-        </div>
-        <div class="bag-wrapper">
-            <object id="smallbag" class="bag" data="${smallbag}" type="image/svg+xml"></object>
-            <span>Bagaż mały </span>
-        </div>
-        <div class="bag-wrapper">
-            <object id="mediumbag" class="bag" data="${mediumbag}" type="image/svg+xml"></object>
-            <span>Bagaż średni </span>
-        </div>
-        <div class="bag-wrapper">
-            <object id="bigbag" class="bag" data="${bigbag}" type="image/svg+xml"></object>
-            <span>Bagaż duży </span>
-        </div>
-    </div>`;
-
-    const bags = document.querySelectorAll(".bag");
-    bags.forEach(bag => {
-        bag.addEventListener("load", function() {
-            bag.contentDocument.addEventListener("click", handleSelectBag);
-        });
+function showBagPicker() {
+    const bagPicker = document.querySelector("#bag-picker");
+    bagPicker.style.display = "block";
+    const bagsElement = bagPicker.querySelector(".bags");
+    bagsElement.innerHTML = "";
+    BAGS.forEach(bag => {
+        const bagWrapper = document.createElement("div");
+        bagWrapper.className = "bag-wrapper";
+        const imageElement = document.createElement("object");
+        imageElement.id = bag.bagId;
+        imageElement.className = "bag";
+        imageElement.data = bag.image;
+        imageElement.type = "image/svg+xml";
+        imageElement.onload = function() {
+            imageElement.contentDocument.onclick = handleSelectBag;
+        }
+        bagWrapper.appendChild(imageElement);
+        const bagNameElement = document.createElement("span");
+        bagNameElement.innerText = bag.name;
+        bagWrapper.appendChild(bagNameElement);
+        bagsElement.appendChild(bagWrapper);
     });
 }
 
-function removeBagPicker() {
-    document.querySelector("#bag-picker").innerHTML = "";
+function hideBagPicker() {
+    document.querySelector("#bag-picker").style.display = "none";
 }
 
 function handleSelectBag(event) {
@@ -439,19 +446,19 @@ function handleSelectBag(event) {
         selectedBags.splice(bagIndex, 1);
         bag.style.backgroundColor = "#f0f0f0";
     }
-    renderBagDetails();
+    showBagDetails();
 }
 
 
 function handleConfirmBags() {
-    removeBagDetails();
-    removeBagPicker();
+    hideBagDetails();
+    hideBagPicker();
     renderSummary();
 }
 
 function renderSummary() {
-    const bagNames = selectedBags.map(bagId => BAG_ID_TO_NAME[bagId]);
-    const bagPrices = selectedBags.map(bagId => BAG_ID_TO_PRICE[bagId]);
+    const bagNames = selectedBags.map(bagId => BAGS.find(bag => bag.bagId === bagId).name);
+    const bagPrices = selectedBags.map(bagId => BAGS.find(bag => bag.bagId === bagId).price);
     let totalBagsPrice = 0;
     bagPrices.forEach(bagPrice => {
         totalBagsPrice += bagPrice;

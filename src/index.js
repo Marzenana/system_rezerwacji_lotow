@@ -68,7 +68,7 @@ function onLogout() {
     hideSelectedCriteriasInfo();
     hideSeatsPicker();
     removeBagPicker();
-    removeSeatsDetails();
+    hideSeatsDetails();
     removeBagDetails();
     removeBagPicker();
     removeSummary();
@@ -253,7 +253,7 @@ function handleConfirmCriteria() {
 
     hideFlightCriteria();
     hideSelectedCriteriasInfo();
-    renderSeatsDetails();
+    showSeatsDetails();
     showSeatsPicker();
 }
 
@@ -304,44 +304,39 @@ function handleSelectSeat(event){
         selectedSeats.splice(seatNumberIndex, 1);
         seat.style["fill"] = "#f2f2f2";
     }
-    renderSeatsDetails();
+    showSeatsDetails();
 } 
 
-function renderSeatsDetails() {
+function showSeatsDetails() {
     document.querySelector("#seats-details").style.display = "block";
     let numberOfPremiumSeats = 0;
     let numberOfStandardSeats = 0;
     selectedSeats.forEach(seat => {
        if (/^[A-Z]\d$/.test(seat)) {
             numberOfPremiumSeats++;
-       }  else {
+       } else {
            numberOfStandardSeats++;
        }
     });
     const totalCost = numberOfStandardSeats * chosenFlight.price + numberOfPremiumSeats * (chosenFlight.pricePremium || 0);
 
-    const confirmSeatsButton =
-    `<button id="confirm-seats-btn" class="confirm-btn">
-        <i class="fa fa-suitcase" aria-hidden="true"></i>
-        Przejdź do wyboru bagażów
-    </button>`;
-
-    document.querySelector("#seats-details").innerHTML =
-    `<div>
-        <span>Wybrano ${selectedSeats.length} miejsc (${numberOfStandardSeats} standard, ${numberOfPremiumSeats} premium) za łączną kwotę: ${totalCost} zł.</span>
-        <div>${selectedSeats.length ? confirmSeatsButton : ""}</div>
-    </div>`;
+    const seatsDetails = document.querySelector("#seats-details");
+    seatsDetails.querySelector("span").innerText = `Wybrano ${selectedSeats.length} miejsc (${numberOfStandardSeats} standard, ${numberOfPremiumSeats} premium) za łączną kwotę: ${totalCost} zł.`;
+    const confirmSeatsButton = seatsDetails.querySelector("button");
+    confirmSeatsButton.onclick = handleConfirmSeats;
     if (selectedSeats.length) {
-        document.querySelector("#confirm-seats-btn").addEventListener("click", handleConfirmSeats);
+        confirmSeatsButton.style.display = "inline";
+    } else {
+        confirmSeatsButton.style.display = "none";
     }
 }
 
-function removeSeatsDetails() {
+function hideSeatsDetails() {
     document.querySelector("#seats-details").style.display = "none";
 }
 
 function handleConfirmSeats() {
-    removeSeatsDetails();
+    hideSeatsDetails();
     hideSeatsPicker();
     renderBagDetails();
     renderBagPicker();

@@ -66,7 +66,7 @@ function onLogout() {
     showLoginWrapper();
     hideFlightCriteria();
     hideSelectedCriteriasInfo();
-    removeSeatsPicker();
+    hideSeatsPicker();
     removeBagPicker();
     removeSeatsDetails();
     removeBagDetails();
@@ -254,35 +254,36 @@ function handleConfirmCriteria() {
     hideFlightCriteria();
     hideSelectedCriteriasInfo();
     renderSeatsDetails();
-    renderSeatsPicker();
+    showSeatsPicker();
 }
 
-function renderSeatsPicker() {
+function showSeatsPicker() {
     const seatsPicker = document.querySelector("#seats-picker")
     seatsPicker.style.display = "block";
     let airplane = null;
     if(chosenFlight.airplane === "Bombardier") {
         airplane = bombardier;
-    } else if(chosenFlight.airplane === "Boeing 737"){
+    } else if(chosenFlight.airplane === "Boeing 737") {
         airplane = boeing737;
-    } else if(chosenFlight.airplane === "Boeing 787 Dreamliner"){
+    } else if(chosenFlight.airplane === "Boeing 787 Dreamliner") {
         airplane = boeing787Dreamliner;
     }
-    seatsPicker.innerHTML = 
-    `<div>
-        <object id="airplane" data="${airplane}" type="image/svg+xml"></object>
-    </div>`;
     const airplaneElement = document.querySelector("#airplane");
-    airplaneElement.addEventListener("load", function(){
+    airplaneElement.data = airplane;
+    airplaneElement.onload = function() {
         const seatsDocument = airplaneElement.contentDocument;
         const seatsElements = seatsDocument.querySelector("#seats");
         const seats = seatsElements.querySelectorAll("path");
         seats.forEach(seat => {
-            seat.addEventListener("click", handleSelectSeat);
-            seat.addEventListener("mouseover", handleMouseOverSeat);
-            seat.addEventListener("mouseout", handleMouseOutSeat);
+            seat.onclick = handleSelectSeat;
+            seat.onmouseover = handleMouseOverSeat;
+            seat.onmouseout = handleMouseOutSeat;
         });
-    })
+    }
+}
+
+function hideSeatsPicker() {
+    document.querySelector("#seats-picker").style.display = "none";
 }
 
 function handleSelectSeat(event){
@@ -341,7 +342,7 @@ function removeSeatsDetails() {
 
 function handleConfirmSeats() {
     removeSeatsDetails();
-    removeSeatsPicker();
+    hideSeatsPicker();
     renderBagDetails();
     renderBagPicker();
     removeSummary();
@@ -366,10 +367,6 @@ function handleMouseOutSeat(event) {
     let seat = seatsElements.querySelector(`#${seatNumber}`);
 
     seat.style["fill"] = seatNumberIndex === -1 ? "#f2f2f2" : "green";
-}
-
-function removeSeatsPicker() {
-    document.querySelector("#seats-picker").style.display = "none";
 }
 
 function renderBagDetails() {

@@ -53,6 +53,10 @@ let selectedBag = null;
 let chosenTravelStandard = null;
 let chosenFlightDate = null;
 
+// Preparation
+
+prepareLogo();
+
 // Login
 
 showLoginWrapper();
@@ -61,7 +65,7 @@ function onLogin(event) {
     event.preventDefault();
     const login = document.querySelector("#login").value;
     const password = document.querySelector("#password").value;
-    for(let i = 0; i < users.length; i++){
+    for (let i = 0; i < users.length; i++) {
         const user = users[i];
         if(login === user.login && password === user.password) {
             showUserInfo(user);
@@ -75,6 +79,10 @@ function onLogin(event) {
 }
 
 function onLogout() {
+    hideAll();
+}
+
+function hideAll() {
     hideUserInfo();
     showLoginWrapper();
     hideFlightCriteria();
@@ -85,6 +93,15 @@ function onLogout() {
     hideBagDetails();
     hideBagPicker();
     hideSummary();
+}
+
+function prepareLogo() {
+    const logoElement = document.querySelector("#logo");
+    logoElement.onclick = handleLogoClick;
+}
+
+function handleLogoClick() {
+    hideAll();
 }
 
 function showUserInfo(user) {

@@ -84,7 +84,7 @@ function onLogout() {
     hideSeatsDetails();
     hideBagDetails();
     hideBagPicker();
-    removeSummary();
+    hideSummary();
 }
 
 function showUserInfo(user) {
@@ -352,7 +352,7 @@ function handleConfirmSeats() {
     hideSeatsPicker();
     showBagDetails();
     showBagPicker();
-    removeSummary();
+    hideSummary();
 }
 
 function handleMouseOverSeat(event) {
@@ -443,10 +443,13 @@ function handleSelectBag(event) {
 function handleConfirmBags() {
     hideBagDetails();
     hideBagPicker();
-    renderSummary();
+    showSummary();
 }
 
-function renderSummary() {
+function showSummary() {
+    const summary = document.querySelector("#summary");
+    summary.style.display = "block";
+
     const bagInfo = BAGS.find(bag => bag.bagId === selectedBag);
     const totalBagsPrice = bagInfo.price * selectedSeats.length;
 
@@ -462,26 +465,31 @@ function renderSummary() {
     
     const totalSeatsCost = numberOfStandardSeats * chosenFlight.price + numberOfPremiumSeats * (chosenFlight.pricePremium || 0);
 
-    let summary = document.querySelector("#summary");
-    summary.style.display = "block";
-    summary.innerHTML = 
-    `<div>
-        <h1>Podsumowanie zamówienia:</h1>
-        <ul>
-            <li>Wylot z ${chosenFlight.fromCity} do ${chosenFlight.toCity} dnia ${chosenFlightDate} o godzinie ${chosenFlight.time}, czas trwania lotu: ${chosenFlight.duration} h.</li>
-            <li>Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.</li>
-            <li>Wybrana taryfa lotu to: ${chosenTravelStandard}. Promocyjny koszt taryfy 9.99 zł.</li>
-            <li>Wybrany rodzaj bagaży: ${bagInfo.name} za łączną cenę ${totalBagsPrice} zł.</li>
-            <li><b>Łączny koszt lotu: ${totalSeatsCost + totalBagsPrice + 9.99} zł.</b></li>
-        </ul>
-        <button id="confirm-reservation" class="confirm-btn">
-            <i class="fas fa-plane-departure"></i>
-            Potwierdź rezerwację i wyloguj
-        </button>
-    </div>`;
-    document.querySelector("#confirm-reservation").addEventListener("click", onLogout);
+    const summaryList = summary.querySelector("ul");
+    summaryList.innerHTML = "";
+
+    const summaryPoints = [
+        `Wylot z ${chosenFlight.fromCity} do ${chosenFlight.toCity} dnia ${chosenFlightDate} o godzinie ${chosenFlight.time}, czas trwania lotu: ${chosenFlight.duration} h.`,
+        `Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.`,
+        `Wybrana taryfa lotu to: ${chosenTravelStandard}. Promocyjny koszt taryfy 9.99 zł.`,
+        `Wybrany rodzaj bagaży: ${bagInfo.name} za łączną cenę ${totalBagsPrice} zł.`,
+    ]
+    summaryPoints.forEach(pointText => {
+        const listItem = document.createElement("li");
+        listItem.innerText = pointText;
+        summaryList.appendChild(listItem);
+    });
+
+    const totalPoint = document.createElement("li");
+    const totalPointText = document.createElement("b");
+    totalPointText.innerText = `Łączny koszt lotu: ${totalSeatsCost + totalBagsPrice + 9.99} zł.`,
+    totalPoint.appendChild(totalPointText);
+    summaryList.appendChild(totalPoint);
+
+    const confirmButton = document.querySelector("#confirm-reservation");
+    confirmButton.onclick = onLogout;
 }
 
-function removeSummary() {
+function hideSummary() {
     document.querySelector("#summary").style.display = "none";
 }

@@ -48,7 +48,7 @@ const BAGS = [
 
 let selectedSeats = [];
 let chosenFlight = null;
-let selectedBags = [];
+let selectedBag = null;
 
 let chosenTravelStandard = null;
 let chosenFlightDate = null;
@@ -220,7 +220,6 @@ function handleCriteriaChange() {
     const travelStandard = document.querySelector("#travel-standard").value;
 
     selectedSeats = [];
-    selectedBags = [];
  
     if (fromCity === "" || toCity === "" || travelStandard === "") {
         showSelectCriteriasWarning();
@@ -381,21 +380,15 @@ function showBagDetails() {
     let bagDetails = document.querySelector("#bag-details");
     bagDetails.style.display = "block";
 
-    const selectedBagsNames = selectedBags.map(bagId => BAGS.find(bag => bag.bagId === bagId).name);
-    let totalPrice = 0;
-    selectedBags.forEach(bagId => {
-        const bagPrice = BAGS.find(bag => bag.bagId === bagId).price;
-        totalPrice += bagPrice;
-    });
-    totalPrice *= selectedSeats.length;
-
     const infoElement = bagDetails.querySelector("span");
 
     const confirmBagsButton = bagDetails.querySelector("button");
     confirmBagsButton.onclick = handleConfirmBags;
 
-    if (selectedBags.length) {
-        infoElement.innerText = `Wybrano bagaże: ${selectedBagsNames.join(", ")} za łączną cenę: ${totalPrice} zł.`;
+    if (selectedBag) {
+        const selectedBagInfo = BAGS.find(bag => bag.bagId === selectedBag);
+        const totalPrice = selectedBagInfo.price * selectedSeats.length;
+        infoElement.innerText = `Wybrano rodzaj bagaży: ${selectedBagInfo.name} za łączną cenę: ${totalPrice} zł.`;
         confirmBagsButton.style.display = "inline";
     } else {
         infoElement.innerText = `Wybierz rodzaje bagaży aby kontynuować.`;
@@ -408,6 +401,7 @@ function hideBagDetails() {
 }
 
 function showBagPicker() {
+    selectedBag = null;
     const bagPicker = document.querySelector("#bag-picker");
     bagPicker.style.display = "block";
     const bagsElement = bagPicker.querySelector(".bags");
@@ -437,15 +431,11 @@ function hideBagPicker() {
 
 function handleSelectBag(event) {
     const bagId = event.target.id;
-    const bagIndex = selectedBags.indexOf(bagId);
-    const bag = document.querySelector(`#${bagId}`);
-    if (bagIndex === -1) {
-        selectedBags.push(bagId);
-        bag.style.backgroundColor = " rgb(26, 71, 167)"
-    } else {
-        selectedBags.splice(bagIndex, 1);
-        bag.style.backgroundColor = "#f0f0f0";
+    if (selectedBag) {
+        document.querySelector(`#${selectedBag}`).style.backgroundColor = "#f0f0f0";
     }
+    selectedBag = bagId;
+    document.querySelector(`#${bagId}`).style.backgroundColor = "rgb(26, 71, 167)";
     showBagDetails();
 }
 
@@ -457,12 +447,8 @@ function handleConfirmBags() {
 }
 
 function renderSummary() {
-    const bagNames = selectedBags.map(bagId => BAGS.find(bag => bag.bagId === bagId).name);
-    const bagPrices = selectedBags.map(bagId => BAGS.find(bag => bag.bagId === bagId).price);
-    let totalBagsPrice = 0;
-    bagPrices.forEach(bagPrice => {
-        totalBagsPrice += bagPrice;
-    });
+    const bagInfo = BAGS.find(bag => bag.bagId === selectedBag);
+    const totalBagsPrice = bagInfo.price * selectedSeats.length;
 
     let numberOfPremiumSeats = 0;
     let numberOfStandardSeats = 0;
@@ -485,7 +471,7 @@ function renderSummary() {
             <li>Wylot z ${chosenFlight.fromCity} do ${chosenFlight.toCity} dnia ${chosenFlightDate} o godzinie ${chosenFlight.time}, czas trwania lotu: ${chosenFlight.duration} h.</li>
             <li>Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.</li>
             <li>Wybrana taryfa lotu to: ${chosenTravelStandard}. Promocyjny koszt taryfy 9.99 zł.</li>
-            <li>Wybrane rodzaje bagaży: ${bagNames.join(", ")} za łączną cenę ${totalBagsPrice} zł.</li>
+            <li>Wybrany rodzaj bagaży: ${bagInfo.name} za łączną cenę ${totalBagsPrice} zł.</li>
             <li><b>Łączny koszt lotu: ${totalSeatsCost + totalBagsPrice + 9.99} zł.</b></li>
         </ul>
         <button id="confirm-reservation" class="confirm-btn">

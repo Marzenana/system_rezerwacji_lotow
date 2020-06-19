@@ -51,7 +51,7 @@ function onLogin(event) {
     for(let i = 0; i < users.length; i++){
         const user = users[i];
         if(login === user.login && password === user.password) {
-            renderUserInfo(user);
+            showUserInfo(user);
             setTimeout(onLogout, 180000);
             hideLoginWrapper();
             showFlightCriteria();
@@ -62,7 +62,7 @@ function onLogin(event) {
 }
 
 function onLogout() {
-    removeUserInfo();
+    hideUserInfo();
     showLoginWrapper();
     hideFlightCriteria();
     hideSelectedCriteriasInfo();
@@ -74,18 +74,16 @@ function onLogout() {
     removeSummary();
 }
 
-function renderUserInfo(user) {
-    document.querySelector("#user-info").innerHTML = 
-    `<i class="fas fa-user"></i>
-    <span>${user.firstName}</span>
-    <button id="logout-button" class="transparent-btn">
-        <i class="fa fa-sign-out"></i>
-    </button>`;
-    document.querySelector("#logout-button").addEventListener("click", onLogout);
+function showUserInfo(user) {
+    const userInfo = document.querySelector("#user-info")
+    userInfo.style.display = "block";
+    userInfo.querySelector("span").innerText = user.firstName;
+    const logoutButton = document.querySelector("#logout-button")
+    logoutButton.onclick = onLogout;
 }
 
-function removeUserInfo() {
-    document.querySelector("#user-info").innerHTML = "";
+function hideUserInfo() {
+    document.querySelector("#user-info").style.display = "none";
 }
 
 function showLoginWrapper() {

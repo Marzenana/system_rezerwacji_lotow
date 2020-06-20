@@ -18,7 +18,8 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html"
+            template: "./src/index.html",
+            favicon: "./src/img/favicon.ico"
         }),
         new CleanWebpackPlugin({root:path.resolve(__dirname, "dist")}),
         new MiniCssExtractPlugin({filename: "[name].css"}),

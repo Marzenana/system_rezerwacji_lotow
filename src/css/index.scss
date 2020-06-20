@@ -154,7 +154,7 @@ header {
     margin: 0 auto;
     font-size: 14pt;
     width: 80%;
-    padding: 5px 30px;
+    padding: 20px 30px;
     text-align: center;
     color: white;
     background-color: rgb(26, 71, 167);
@@ -162,7 +162,6 @@ header {
 
 #select-criterias-warning, #selected-criterias-info {
     display: none;
-
 }
 
 .confirm-btn {
@@ -173,7 +172,7 @@ header {
     cursor: pointer;
     font-size: 12pt;
     padding: 6px;
-    margin: 5px 0;
+    margin-top: 10px;
 }
 
 .number-of {
@@ -190,7 +189,7 @@ header {
     display: none;
     margin: 50px auto;
     width: 80%;
-    padding: 15px;
+    padding: 20px;
     background-color: rgb(26, 71, 167);
     color: white;
 }
@@ -200,22 +199,25 @@ header {
 }
 
 #seats-picker {
+    display: none;
+}
+
+.seats-picker-box {
     background-color: white;
     display: inline-block;
     margin: 60px auto;
 }
 
+@media screen and (max-width: 767px) {
+    .seats-picker-box {
+        transform: rotate(270deg); 
+        margin-top: 550px;
+    }
+}
+
 #airplane {
     margin: 0 auto;
     display: block;
-}
-
-@media screen and (max-width: 767px) {
-    #seats-picker {
-        transform: rotate(270deg); 
-        display: block;
-        margin-top: 550px;
-    }
 }
 
 .selected-seat {
@@ -239,14 +241,14 @@ header {
 
 .bags {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
 .bag-wrapper {
-    width: 200px;
+    width: 180px;
     text-align: center;
-    margin: 10px;
+    margin: 30px;
     font-weight: bold;
 }
 

@@ -46,10 +46,10 @@ const BAGS = [
 
 // Global state
 
-let selectedSeats = [];
+let loggedUser = null;
+let chosenSeats = [];
 let chosenFlight = null;
-let selectedBag = null;
-
+let chosenBag = null;
 let chosenTravelStandard = null;
 let chosenFlightDate = null;
 
@@ -68,7 +68,8 @@ function onLogin(event) {
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
         if(login === user.login && password === user.password) {
-            showUserInfo(user);
+            loggedUser = user;
+            showUserInfo();
             setTimeout(onLogout, 180000);
             hideLoginWrapper();
             showFlightCriteria();
@@ -79,12 +80,14 @@ function onLogin(event) {
 }
 
 function onLogout() {
+    loggedUser = null;
     hideAll();
+    showLoginWrapper();
 }
 
 function hideAll() {
     hideUserInfo();
-    showLoginWrapper();
+    hideLoginWrapper();
     hideFlightCriteria();
     hideSelectedCriteriasInfo();
     hideSeatsPicker();
@@ -101,13 +104,17 @@ function prepareLogo() {
 }
 
 function handleLogoClick() {
-    hideAll();
+    if (loggedUser) {
+        hideAll();
+        showUserInfo();
+        showFlightCriteria();
+    }
 }
 
-function showUserInfo(user) {
+function showUserInfo() {
     const userInfo = document.querySelector("#user-info")
     userInfo.style.display = "block";
-    userInfo.querySelector("span").innerText = user.firstName;
+    userInfo.querySelector("span").innerText = loggedUser.firstName;
     const logoutButton = document.querySelector("#logout-button")
     logoutButton.onclick = onLogout;
 }
@@ -236,7 +243,7 @@ function handleCriteriaChange() {
     const toCity = document.querySelector("#to-city").value;
     const travelStandard = document.querySelector("#travel-standard").value;
 
-    selectedSeats = [];
+    chosenSeats = [];
  
     if (fromCity === "" || toCity === "" || travelStandard === "") {
         showSelectCriteriasWarning();
@@ -317,20 +324,20 @@ function hideSeatsPicker() {
 
 function handleSelectSeat(event){
     const seatNumber = event.target.id;
-    const seatNumberIndex = selectedSeats.indexOf(seatNumber);
+    const seatNumberIndex = chosenSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
     const seatsDocument = airplaneElement.contentDocument;
     const seatsElements = seatsDocument.querySelector("#seats");
     let seat = seatsElements.querySelector(`#${seatNumber}`);
     if(seatNumberIndex === -1){
         seat.style["fill"] = "green";
-        if (selectedSeats.length < 9) {
-            selectedSeats.push(seatNumber)
+        if (chosenSeats.length < 9) {
+            chosenSeats.push(seatNumber)
         } else {
             alert("Nie można wybrać więcej niż 9 miejsc")
         }
     } else {
-        selectedSeats.splice(seatNumberIndex, 1);
+        chosenSeats.splice(seatNumberIndex, 1);
         seat.style["fill"] = "#f2f2f2";
     }
     showSeatsDetails();
@@ -340,7 +347,7 @@ function showSeatsDetails() {
     document.querySelector("#seats-details").style.display = "block";
     let numberOfPremiumSeats = 0;
     let numberOfStandardSeats = 0;
-    selectedSeats.forEach(seat => {
+    chosenSeats.forEach(seat => {
        if (/^[A-Z]\d$/.test(seat)) {
             numberOfPremiumSeats++;
        } else {
@@ -350,10 +357,10 @@ function showSeatsDetails() {
     const totalCost = numberOfStandardSeats * chosenFlight.price + numberOfPremiumSeats * (chosenFlight.pricePremium || 0);
 
     const seatsDetails = document.querySelector("#seats-details");
-    seatsDetails.querySelector("span").innerText = `Wybrano ${selectedSeats.length} miejsc (${numberOfStandardSeats} standard, ${numberOfPremiumSeats} premium) za łączną kwotę: ${totalCost} zł.`;
+    seatsDetails.querySelector("span").innerText = `Wybrano ${chosenSeats.length} miejsc (${numberOfStandardSeats} standard, ${numberOfPremiumSeats} premium) za łączną kwotę: ${totalCost} zł.`;
     const confirmSeatsButton = seatsDetails.querySelector("button");
     confirmSeatsButton.onclick = handleConfirmSeats;
-    if (selectedSeats.length) {
+    if (chosenSeats.length) {
         confirmSeatsButton.style.display = "inline";
     } else {
         confirmSeatsButton.style.display = "none";
@@ -384,7 +391,7 @@ function handleMouseOverSeat(event) {
 
 function handleMouseOutSeat(event) {
     const seatNumber = event.target.id;
-    const seatNumberIndex = selectedSeats.indexOf(seatNumber);
+    const seatNumberIndex = chosenSeats.indexOf(seatNumber);
     const airplaneElement = document.querySelector("#airplane");
     const seatsDocument = airplaneElement.contentDocument;
     const seatsElements = seatsDocument.querySelector("#seats");
@@ -402,10 +409,10 @@ function showBagDetails() {
     const confirmBagsButton = bagDetails.querySelector("button");
     confirmBagsButton.onclick = handleConfirmBags;
 
-    if (selectedBag) {
-        const selectedBagInfo = BAGS.find(bag => bag.bagId === selectedBag);
-        const totalPrice = selectedBagInfo.price * selectedSeats.length;
-        infoElement.innerText = `Wybrano rodzaj bagaży: ${selectedBagInfo.name} za łączną cenę: ${totalPrice} zł.`;
+    if (chosenBag) {
+        const chosenBagInfo = BAGS.find(bag => bag.bagId === chosenBag);
+        const totalPrice = chosenBagInfo.price * chosenSeats.length;
+        infoElement.innerText = `Wybrano rodzaj bagaży: ${chosenBagInfo.name} za łączną cenę: ${totalPrice} zł${chosenBagInfo.bagId === "minibag" ? " (w cenie biletu)" : ""}.`;
         confirmBagsButton.style.display = "inline";
     } else {
         infoElement.innerText = `Wybierz rodzaje bagaży aby kontynuować.`;
@@ -418,7 +425,7 @@ function hideBagDetails() {
 }
 
 function showBagPicker() {
-    selectedBag = null;
+    chosenBag = null;
     const bagPicker = document.querySelector("#bag-picker");
     bagPicker.style.display = "block";
     const bagsElement = bagPicker.querySelector(".bags");
@@ -448,10 +455,10 @@ function hideBagPicker() {
 
 function handleSelectBag(event) {
     const bagId = event.target.id;
-    if (selectedBag) {
-        document.querySelector(`#${selectedBag}`).style.backgroundColor = "#f0f0f0";
+    if (chosenBag) {
+        document.querySelector(`#${chosenBag}`).style.backgroundColor = "#f0f0f0";
     }
-    selectedBag = bagId;
+    chosenBag = bagId;
     document.querySelector(`#${bagId}`).style.backgroundColor = "rgb(26, 71, 167)";
     showBagDetails();
 }
@@ -467,12 +474,12 @@ function showSummary() {
     const summary = document.querySelector("#summary");
     summary.style.display = "block";
 
-    const bagInfo = BAGS.find(bag => bag.bagId === selectedBag);
-    const totalBagsPrice = bagInfo.price * selectedSeats.length;
+    const bagInfo = BAGS.find(bag => bag.bagId === chosenBag);
+    const totalBagsPrice = bagInfo.price * chosenSeats.length;
 
     let numberOfPremiumSeats = 0;
     let numberOfStandardSeats = 0;
-    selectedSeats.forEach(seat => {
+    chosenSeats.forEach(seat => {
        if (/^[A-Z]\d$/.test(seat)) {
             numberOfPremiumSeats++;
        }  else {
@@ -487,7 +494,7 @@ function showSummary() {
 
     const summaryPoints = [
         `Wylot z ${chosenFlight.fromCity} do ${chosenFlight.toCity} dnia ${chosenFlightDate} o godzinie ${chosenFlight.time}, czas trwania lotu: ${chosenFlight.duration} h.`,
-        `Wybrano ${selectedSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.`,
+        `Wybrano ${chosenSeats.length} miejsc w tym ${numberOfStandardSeats} w klasie standard oraz ${numberOfPremiumSeats} w klasie premium za łączną cenę ${totalSeatsCost} zł.`,
         `Wybrana taryfa lotu to: ${chosenTravelStandard}. Promocyjny koszt taryfy 9.99 zł.`,
         `Wybrany rodzaj bagaży: ${bagInfo.name} za łączną cenę ${totalBagsPrice} zł.`,
     ]
